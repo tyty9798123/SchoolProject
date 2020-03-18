@@ -1,6 +1,6 @@
 <% extend('./layouts/default')%>
 <div class="container mt-2 mb-2">
-  <form>
+  <div id="sign_up">
     <div class="form-group">
       <label for="inputAccount">帳號</label>
       <input type="text" class="form-control" id="inputAccount" aria-describedby="emailHelp">
@@ -10,5 +10,22 @@
       <input type="password" class="form-control" id="inputPassword">
     </div>
     <button type="submit" class="btn btn-primary">註冊</button>
-  </form>
+  </div>
 </div>
+
+<script>
+  new Vue({
+    el: '#sign_up',
+    created(){
+      
+    },
+    data: {
+
+    },
+    methods: {
+    },
+    computed: {
+
+    }
+  })
+</script>

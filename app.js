@@ -8,6 +8,7 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var signupRouter = require('./routes/users/signup');
 var express_ejs_extend = require('express-ejs-extend');
+var mongoose = require('mongoose');
 
 var app = express();
 
@@ -33,6 +34,23 @@ app.engine('ejs', express_ejs_extend);
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/signup', signupRouter);
+
+
+//DB
+var db = require("./connections/mongoose").mongoURI;
+
+//Connect
+mongoose.connect(db, { useNewUrlParser: true, useUnifiedTopology : true})
+.then(function(){
+    console.log("MongoDB Connected")
+})
+.catch(function(err){
+    console.log(err);
+})
+
+app.get('/', (req,res) => {
+    res.send("Hello World");
+})
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -58,7 +58,26 @@ class UserController{
     }
 
     login(req, res, next){
-
+        if(req.body.account && req.body.password){
+            muser.findOne({
+                account: req.body.account,
+                password: crypto.createHash('sha256').update(req.body.password).digest('base64')
+            })
+            .then(function(result){
+                if(!result){
+                    return res.json({
+                        success: false,
+                        message: '帳號或密碼錯誤。',
+                    })
+                }
+                else{
+                    req.session.uid = result._id;
+                    return res.json({
+                        success: true,
+                    })
+                }
+            })
+        }
     }
 }
 

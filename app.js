@@ -25,11 +25,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 //使用 express-session
 app.use(session({
-  secret: 'keyboard cat',
-  resave: false,
-  saveUninitialized: true,
-  cookie: { secure: true }
-}))
+  secret : 'keyboard cat',
+  resave : true,
+  saveUninitialized:true
+ }))
 app.engine('ejs', express_ejs_extend); 
 
 app.use('/', indexRouter);

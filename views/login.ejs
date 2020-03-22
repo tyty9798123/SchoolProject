@@ -21,16 +21,17 @@
                     account: vm.account,
                     password: vm.password,
                 }
-                axios.post('/signup', data)
+                axios.post('/login', data)
                 .then(function(res){
                     if(res.data.success){
                         vm.$message({
                             message: '登入成功！',
                             type: 'success'
                         });
+                        location.href = '/';
                     }
                     else{
-                        vm.$message.error(`註冊失敗，${res.data.message}`);
+                        vm.$message.error(`登入失敗，${res.data.message}`);
                     }
                 })
                 .catch(function(res){

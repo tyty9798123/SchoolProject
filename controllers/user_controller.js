@@ -14,7 +14,7 @@ class UserController{
         res.render('signup', renderData);
     }
     // Post sign_up / create an account
-    create(req, res,next){
+    create(req, res, snext){
         // 確認資料都存在
         if ( req.body.name && req.body.account && req.body.password ){
             let name = req.body.name, account = req.body.account, password = req.body.password;
@@ -49,6 +49,16 @@ class UserController{
         else{
             return res.json( { success: false, message: '系統發生錯誤。' } )
         }
+    }
+
+    showLogin(req, res, next){
+        res.render('login', {
+            title: '登入'
+        })
+    }
+
+    login(req, res, next){
+
     }
 }
 

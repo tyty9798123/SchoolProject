@@ -13,7 +13,9 @@ class UserController{
           }
         res.render('signup', renderData);
     }
-    // Post sign_up / create an account
+    // method: POST
+    // path /signup
+    // Params: name, account, password
     create(req, res, snext){
         // 確認資料都存在
         if ( req.body.name && req.body.account && req.body.password ){
@@ -50,13 +52,21 @@ class UserController{
             return res.json( { success: false, message: '系統發生錯誤。' } )
         }
     }
-
+    // method: GET
+    // path /login
+    // Params: None
     showLogin(req, res, next){
+        if (req.session.uid){   
+            return res.send(`您目前已處於登入狀態。<a href='/'>返回首頁</a>`);
+        }
         res.render('login', {
             title: '登入'
         })
     }
 
+    // method: POST
+    // path: /login
+    // Params: account, password
     login(req, res, next){
         if(req.body.account && req.body.password){
             muser.findOne({

@@ -9,6 +9,7 @@ var usersRouter = require('./routes/users');
 var signupRouter = require('./routes/users/signup');
 var express_ejs_extend = require('express-ejs-extend');
 var loginRouter = require('./routes/users/login');
+var isolationRouter = require('./routes/isolation');
 var mongoose = require('mongoose');
 
 var app = express();
@@ -35,6 +36,7 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/signup', signupRouter);
 app.use('/login', loginRouter);
+app.use('/isolation', isolationRouter);
 
 //DB
 var db = require("./connections/mongoose").mongoURI;

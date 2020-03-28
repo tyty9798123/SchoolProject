@@ -10,8 +10,10 @@
         <el-menu-item index="1"><i class="fa fa-home" style="font-size: 20px;"></i> 首頁</el-menu-item>
         <el-submenu index="2">
             <template slot="title"><i class="fa fa-user" style="font-size: 20px;"></i> 會員</template>
+            <% if (!auth){ %>
             <el-menu-item index="2-1">註冊</el-menu-item>
             <el-menu-item index="2-2">登入</el-menu-item>
+            <% } %>
             <el-menu-item index="2-3">使用辦法</el-menu-item>
             <el-submenu index="2-4">
             <template slot="title">資料修改</template>
@@ -19,6 +21,9 @@
             <el-menu-item index="2-4-2">選項2</el-menu-item>
             <el-menu-item index="2-4-3">選項3</el-menu-item>
             </el-submenu>
+            <% if (auth){ %>
+                <el-menu-item index="2-5">登出</el-menu-item>
+            <% } %>
         </el-submenu>
         <el-menu-item index="3" disabled>消息中心</el-menu-item>
         <el-menu-item index="4">管理介面</el-menu-item>
@@ -53,6 +58,9 @@
                         break;
                     case "2-2":
                         location.href = '/login';
+                        break;
+                    case "2-5":
+                        location.href = '/logout';
                         break;
                 }
             }

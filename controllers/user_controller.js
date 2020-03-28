@@ -8,9 +8,11 @@ let crypto = require('crypto');
 class UserController{
     // Get sign_up Page
     new(req, res, next){
+        let auth = req.session.uid;
         let renderData = {
-            title: "註冊"
-          }
+            title: "註冊",
+            auth
+        }
         res.render('signup', renderData);
     }
     // method: POST
@@ -56,11 +58,13 @@ class UserController{
     // path /login
     // Params: None
     showLogin(req, res, next){
+        let auth = req.session.uid;
         if (req.session.uid){   
             return res.send(`您目前已處於登入狀態。<a href='/'>返回首頁</a>`);
         }
         res.render('login', {
-            title: '登入'
+            title: '登入',
+            auth
         })
     }
 
@@ -88,6 +92,11 @@ class UserController{
                 }
             })
         }
+    }
+
+    logout(req, res, next) {
+        req.session.destroy();
+        res.redirect('/');
     }
 }
 

@@ -7,6 +7,7 @@ var session = require('express-session')
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var signupRouter = require('./routes/users/signup');
+var logoutRouter = require('./routes/users/logout');
 var express_ejs_extend = require('express-ejs-extend');
 var loginRouter = require('./routes/users/login');
 var isolationRouter = require('./routes/isolation');
@@ -37,6 +38,7 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/signup', signupRouter);
 app.use('/login', loginRouter);
+app.use('/logout', logoutRouter);
 app.use('/isolation', isolationRouter);
 
 //DB

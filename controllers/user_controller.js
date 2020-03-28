@@ -17,8 +17,11 @@ class UserController{
     }
     // method: POST
     // path /signup
-    // Params: name, account, password
+    // Params: name, account, password, captcha_text
     create(req, res, snext){
+        if (req.session.code !== req.body.captcha_text.toLowerCase()){
+            return res.json( { success: false, message: '驗證碼輸入錯誤。' } )
+        }
         // 確認資料都存在
         if ( req.body.name && req.body.account && req.body.password ){
             let name = req.body.name, account = req.body.account, password = req.body.password;

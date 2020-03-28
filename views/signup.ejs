@@ -3,6 +3,9 @@
   #sign_up{
     background-color: #f9f9f9;
   }
+  #codeimg{
+    cursor: pointer;
+  }
 </style>
 <div id="sign_up">
   <div class="container mb-2">
@@ -30,6 +33,26 @@
       <br><br>
       <el-input v-model="confirmed_password" placeholder="確認密碼" type="password"></el-input>
       <br><br>
+      <div class="row" style="margin-top: 10px;"> 
+        <div class="col-4">
+            <center>
+                <span style="font-size: 18px;">請輸入正確的驗證碼：</span>
+            </center>
+        </div>
+        <div class="col-8">
+            <div class="row">
+                <div class="col-md-6 col-sm-12">
+                    <input type="text" v-model="captcha_text" class="form-control" placeholder="" name="code" aria-describedby="helpId">
+                </div>
+                <div class="col-md-6 col-sm-12">
+                    <center>
+                        <span id="codeimg" @click="getCaptcha()"></span>
+                    </center>
+                </div>
+            </div>
+        </div>
+      </div>
+      <br>
       <div style="text-align: center;">
         <template v-if="check_input_is_valid">
           <el-button type="primary" plain @click="singupButtonClicked" style="width: 100px;">註冊</el-button>
@@ -47,13 +70,15 @@
   new Vue({
     el: '#sign_up',
     created(){
-
+      var vm = this;
+      vm.getCaptcha();
     },
     data: {
       name: '',
       account: '',
       password: '',
-      confirmed_password: ''
+      confirmed_password: '',
+      captcha_text: '',
     },
     methods: {
       singupButtonClicked(){
@@ -63,6 +88,7 @@
           name: vm.name,
           account: vm.account,
           password: vm.password,
+          captcha_text: vm.captcha_text
         }
         axios.post('/signup', data)
         .then(function(res){
@@ -83,13 +109,25 @@
         .catch(function(res){
           vm.$message.error(`與伺服器連線中斷。`);
         })
+      },
+      getCaptcha(){
+        var xhr = new XMLHttpRequest();
+        xhr.open('post', '/captcha', true);
+        xhr.setRequestHeader('Content-type', 'application-json');
+        xhr.send();
+        xhr.onload = function(){
+            var response = JSON.parse(xhr.responseText);
+            var codeimg = document.getElementById("codeimg");
+            codeimg.innerHTML = response.result.img;
+        }
       }
     },
     computed: {
       check_input_is_valid(){
         let vm = this;
         if (vm.name.length > 3 && vm.account.length >= 6 && vm.account.length <= 20 
-        && vm.password.length >= 6 && vm.password.length <= 20 && vm.password == vm.confirmed_password){
+        && vm.password.length >= 6 && vm.password.length <= 20 && vm.password == vm.confirmed_password
+        && vm.captcha_text.length == 5){
           return true;
         }
         return false;

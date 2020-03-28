@@ -11,6 +11,7 @@ var express_ejs_extend = require('express-ejs-extend');
 var loginRouter = require('./routes/users/login');
 var isolationRouter = require('./routes/isolation');
 var mongoose = require('mongoose');
+var mysql =require('./connections/mysql');
 
 var app = express();
 

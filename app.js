@@ -10,7 +10,7 @@ var signupRouter = require('./routes/users/signup');
 var logoutRouter = require('./routes/users/logout');
 var express_ejs_extend = require('express-ejs-extend');
 var loginRouter = require('./routes/users/login');
-var isolationRouter = require('./routes/isolation');
+var managementRouter = require('./routes/management');
 var mongoose = require('mongoose');
 var mysql = require('./connections/mysql');
 var captchaRouter = require('./routes/captcha');
@@ -40,7 +40,7 @@ app.use('/users', usersRouter);
 app.use('/signup', signupRouter);
 app.use('/login', loginRouter);
 app.use('/logout', logoutRouter);
-app.use('/isolation', isolationRouter);
+app.use('/management', managementRouter);
 app.use('/captcha', captchaRouter);
 //DB
 var db = require("./connections/mongoose").mongoURI;

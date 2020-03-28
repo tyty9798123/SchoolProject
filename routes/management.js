@@ -2,8 +2,8 @@ var express = require('express');
 var router = express.Router();
 
 router.get('/', function(req, res, next) {
-  console.log(1);
-  res.render('index', { title: 'Express' });
+  let auth = req.session.uid;
+  res.render('./management/index.ejs', { title: 'Express', auth});
 });
 
 module.exports = router;

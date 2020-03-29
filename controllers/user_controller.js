@@ -88,7 +88,7 @@ class UserController{
                     })
                 }
                 else{
-                    req.session.uid = result._id;
+                    req.session.uid = result.account;
                     return res.json({
                         success: true,
                     })

@@ -163,7 +163,24 @@
                     isolation_type_id: 1,
                     selected_country_names,
                 }
-                console.log(data);
+
+                axios.post('/management', data)
+                .then( (res) => {
+                    if (res.data.success){
+                        this.$notify({
+                            title: '成功',
+                            message: `新增成功，編號${res.data.isolatorId}。`,
+                            type: 'success'
+                        });
+                    }
+                    else{
+                        vm.$notify.error({
+                            title: '錯誤',
+                            message: `新增失敗，${res.data.message}`
+                        });
+                    }
+                })
+                
             }
         },
     })

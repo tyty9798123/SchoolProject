@@ -10,4 +10,6 @@ router.get('/', function(req, res, next) {
 });
 router.post('/', managementController.create);
 
+router.get('/get_all_isolator_info', managementController.getAllIsolatorInfo);
+
 module.exports = router;

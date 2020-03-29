@@ -62,8 +62,52 @@ let createTravelCountry = async (data, id) => {
     })
 }
 
+let getAllIsolators = async () => {
+    return new Promise( async (resolve, reject) => {
+        let stmt = `SELECT * FROM isolators;`;
+        await mysql.query(stmt, (err, result) => {
+            if (err) {
+                reject();
+            }
+            else{
+                resolve(result);
+            }
+        })
+    })
+}
+
+let getAllIsolations = async () => {
+    return new Promise( async (resolve, reject) => {
+        let stmt = `SELECT * FROM isolations;`;
+        await mysql.query(stmt, (err, result) => {
+            if (err) {
+                reject();
+            }
+            else{
+                resolve(result);
+            }
+        })
+    })
+};
+
+let getAllTravelCountries = async () => {
+    return new Promise( async (resolve, reject) => {
+        let stmt = `SELECT * FROM travel_countries;`;
+        await mysql.query(stmt, (err, result) => {
+            if (err) {
+                reject();
+            }
+            else{
+                resolve(result);
+            }
+        })
+    }) 
+}
 module.exports = {
     createIsolators,
     createIsolation,
-    createTravelCountry
+    createTravelCountry,
+    getAllIsolators,
+    getAllIsolations,
+    getAllTravelCountries
 }

@@ -35,6 +35,39 @@ class ManagementController{
             return res.json( {success: false, message: '資料插入時發生錯誤。'} );
         }
     }
+
+    async getAllIsolatorInfo(req, res, next){
+        let getAllIsolators = await managementModel.getAllIsolators();
+        let getAllIsolations = await managementModel.getAllIsolations();
+        let getAllTravelCountries = await managementModel.getAllTravelCountries();
+
+        console.log(getAllIsolators)
+        console.log(getAllIsolations)
+        console.log(getAllTravelCountries)
+        // 進行資料處理
+        let data = getAllIsolators.map( (isolatorItem, isolatorIndex, isolatorArray) => {
+            let isolationData = {};
+            let travelContries = [];
+            getAllIsolations.forEach( (isolationItem, isolationIndex, isolationArray) => {
+                if (isolatorItem.id === isolationItem.isolator_id ){
+                    isolationData = isolationItem;
+                }
+            })
+
+            getAllTravelCountries.forEach( (travelCountryItem, travelCountryIndex, travelCountryArray) => {
+                if (isolatorItem.id === travelCountryItem.isolator_id ){
+                    travelContries.push(travelCountryItem.country_name);
+                }
+            })
+            return {
+                ...isolatorItem,
+                isolationData,
+                countries: travelContries
+            }
+        })
+        console.log(data)
+        return res.send(data);
+    }
 }
 
 function checkCreateColumnsAreValid(req, res, next, _type){

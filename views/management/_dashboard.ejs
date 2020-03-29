@@ -35,41 +35,87 @@
     <el-table-column type="expand">
         <template slot-scope="props">
         <el-form label-position="left" inline class="demo-table-expand">
-            <el-form-item label="商品名称">
+            <el-form-item label="姓名"">
             <span>{{ props.row.name }}</span>
             </el-form-item>
-            <el-form-item label="所属店铺">
-            <span>{{ props.row.shop }}</span>
-            </el-form-item>
-            <el-form-item label="商品 ID">
+            <el-form-item label="ID">
             <span>{{ props.row.id }}</span>
             </el-form-item>
-            <el-form-item label="店铺 ID">
-            <span>{{ props.row.shopId }}</span>
+            <el-form-item label="年齡">
+            <span>{{ props.row.age }}</span>
             </el-form-item>
-            <el-form-item label="商品分类">
-            <span>{{ props.row.category }}</span>
+            <el-form-item label="身分證字號">
+            <span>{{ props.row.identification }}</span>
             </el-form-item>
-            <el-form-item label="店铺地址">
-            <span>{{ props.row.address }}</span>
+            <el-form-item label="護照號碼">
+            <span>{{ props.row.passport }}</span>
             </el-form-item>
-            <el-form-item label="商品描述">
-            <span>{{ props.row.desc }}</span>
+            <el-form-item label="性別">
+            <span>{{ props.row.gender }}</span>
+            </el-form-item>
+            <el-form-item label="生日">
+            <span>{{ props.row.birthday }}</span>
+            </el-form-item>
+            <el-form-item label="聯絡電話">
+            <span>{{ props.row.phone }}</span>
+            </el-form-item>
+            <el-form-item label="出境日期">
+            <span>{{ props.row.departure_date }}</span>
+            </el-form-item>
+            <el-form-item label="入境日期">
+            <span>{{ props.row.entry_date }}</span>
+            </el-form-item>
+            <el-form-item label="近期曾前往">
+            <template v-for="(item, index) in props.row.countries">
+                <span>{{ item }}</span>
+                <template v-if="index != props.row.countries.length -1">
+                    <span>、</span>
+                </template>
+            </template>
+            </el-form-item>
+            <el-form-item label="檢疫起始日">
+                <span>{{ props.row.isolationData.start_date }}</span>
+            </el-form-item>
+            <el-form-item label="檢疫結束日">
+                <span>{{ props.row.isolationData.end_date }}</span>
+            </el-form-item>
+            <el-form-item label="檢疫天數">
+                <span>{{ props.row.isolationData.days }}</span>
+            </el-form-item>
+            <el-form-item label="備註">
+                <span>{{ props.row.note }}</span>
             </el-form-item>
         </el-form>
         </template>
     </el-table-column>
     <el-table-column
-        label="商品 ID"
+        label="類型"
+        prop="isolation_type">
+    </el-table-column>
+    
+    <el-table-column
+        label="ID"
         prop="id">
     </el-table-column>
     <el-table-column
-        label="商品名称"
+        label="姓名"
         prop="name">
     </el-table-column>
     <el-table-column
-        label="描述"
-        prop="desc">
+        label="年齡"
+        prop="age">
+    </el-table-column>
+    <el-table-column
+        label="通訊地址"
+        prop="mailing_address">
+    </el-table-column>
+    <el-table-column
+        label="聯絡電話"
+        prop="phone">
+    </el-table-column>
+    <el-table-column
+        label="剩餘時間"
+        prop="remainingTime">
     </el-table-column>
     </el-table>
 </div>
@@ -78,46 +124,92 @@
     new Vue({
         el: '#dashboard',
         data: {
-            tableData: [{
-                id: '12987122',
-                name: '好滋好味鸡蛋仔',
-                category: '江浙小吃、小吃零食',
-                desc: '荷兰优质淡奶，奶香浓而不腻',
-                address: '上海市普陀区真北路',
-                shop: '王小虎夫妻店',
-                shopId: '10333'
-            }, {
-                id: '12987123',
-                name: '好滋好味鸡蛋仔',
-                category: '江浙小吃、小吃零食',
-                desc: '荷兰优质淡奶，奶香浓而不腻',
-                address: '上海市普陀区真北路',
-                shop: '王小虎夫妻店',
-                shopId: '10333'
-            }, {
-                id: '12987125',
-                name: '好滋好味鸡蛋仔',
-                category: '江浙小吃、小吃零食',
-                desc: '荷兰优质淡奶，奶香浓而不腻',
-                address: '上海市普陀区真北路',
-                shop: '王小虎夫妻店',
-                shopId: '10333'
-            }, {
-                id: '12987126',
-                name: '好滋好味鸡蛋仔',
-                category: '江浙小吃、小吃零食',
-                desc: '荷兰优质淡奶，奶香浓而不腻',
-                address: '上海市普陀区真北路',
-                shop: '王小虎夫妻店',
-                shopId: '10333'
-            }]
+            tableData: []
         },
         created() {
             let vm = this;
+            vm.getTableData();
         },
         methods: {
             getTableData() {
-                
+                let vm = this;
+                axios.get('/management/get_all_isolator_info')
+                .then( (res) => {
+                    let data = res.data;
+                    let newData = data.map( (item, index, array) => {
+                        //時間
+                        let target = new Date(item.isolationData.end_date).getTime();
+                        let second = (target - Date.now()) / 1000 >> 0;
+                        let remainingTime = vm.distance(second);
+                        //過濾類別
+                        switch (item.isolationData.isolation_types_id){
+                            case 1:
+                                item.isolation_type = "居家檢疫";
+                                break;
+                            case 2:
+                                item.isolation_type = "居家隔離";
+                                break;
+                            case 3:
+                                item.isolation_type = "自主健康管理";
+                                break;
+                        }
+                        //性別
+                        item.gender = item.gender == 1 ? "男性" : "女性";
+                        //生日
+                        item.birthday = vm.datetimeConvert(item.birthday);
+                        //出境/入境日期
+                        item.departure_date = vm.datetimeConvert(item.departure_date);
+                        item.entry_date = vm.datetimeConvert(item.entry_date);
+                        //檢疫起始日/檢疫結束日
+                        item.isolationData.start_date = vm.datetimeConvert(item.isolationData.start_date);
+                        item.isolationData.end_date = vm.datetimeConvert(item.isolationData.end_date);
+
+                        return {
+                            ...item,
+                            remainingTime,
+                        }
+                    });
+                    console.log(newData)
+                    vm.tableData = newData;
+                })
+                .catch( () => alert('讀取資料失敗。') );
+            },
+            distance(x) {
+                var day = x / 86400 >> 0;
+                var hour;
+                if (x < 86400) {
+                    hour = x / 3600 >> 0;
+                } 
+                else {
+                    hour = x % 86400 / 3600 >> 0;
+                }
+                var minute = x % 3600 / 60 >> 0;
+                var second = x % 60;
+
+                if (second >= 0) {
+                    return day + " 天 " + hour + " 時"
+                } else {
+                    return "已結束";
+                }
+            },
+            datetimeConvert(UNIX_timestamp){  
+                var a = new Date(UNIX_timestamp);
+                var months = ['01','02','03','04','05','06','07','08','09','10','11','12'];
+                var year = a.getFullYear(), month = months[a.getMonth()], date = a.getDate(),
+                date = a.getDate(), hour = a.getHours(), min = a.getMinutes(), sec = a.getSeconds();
+                if (date < 10){
+                    date = "0" + date;
+                }
+                if (sec < 10){
+                    sec = "0" + sec;
+                }
+                if (hour < 10){
+                    hour = "0" + hour;
+                }
+                if (min < 10){
+                    min = "0" + min;
+                }
+                return year + '-' + month + '-' + date + ' '
             }
         }
     })

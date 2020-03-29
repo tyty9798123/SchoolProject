@@ -40,10 +40,6 @@ class ManagementController{
         let getAllIsolators = await managementModel.getAllIsolators();
         let getAllIsolations = await managementModel.getAllIsolations();
         let getAllTravelCountries = await managementModel.getAllTravelCountries();
-
-        console.log(getAllIsolators)
-        console.log(getAllIsolations)
-        console.log(getAllTravelCountries)
         // 進行資料處理
         let data = getAllIsolators.map( (isolatorItem, isolatorIndex, isolatorArray) => {
             let isolationData = {};
@@ -65,7 +61,6 @@ class ManagementController{
                 countries: travelContries
             }
         })
-        console.log(data)
         return res.send(data);
     }
 }

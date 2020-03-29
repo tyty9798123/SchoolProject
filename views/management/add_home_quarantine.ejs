@@ -68,7 +68,7 @@
                 :filter-method="filterMethod"
                 filter-placeholder="過濾"
                 v-model="form.selected_countries"
-                :data="form.all_countries">
+                :data="all_countries">
             </el-transfer>
             <hr>
             <div class="row">
@@ -127,12 +127,12 @@
                 departure_date: '',
                 entry_date: '',
                 note: '',
-                all_countries: [],
                 selected_countries: [],
                 start_date: '',
                 end_date: '',
                 days: '' //檢疫天數
-            }
+            },
+            all_countries: [],
         },
         methods: {
             generateCountryData(){
@@ -140,7 +140,7 @@
                 axios.get('/country-list.json')
                 .then((res) => {
                     res.data.forEach( (item, index, array) => {
-                        vm.form.all_countries.push({
+                        vm.all_countries.push({
                             label: item.traditionalName,
                             key: index,
                             pinyin: item.traditionalName
@@ -153,6 +153,17 @@
             },
             submit(){
                 let vm = this;
+                let selected_country_names = [];
+                for (let i = 0; i < vm.form.selected_countries.length; i++){
+                    selected_country_names.push( vm.all_countries[ vm.form.selected_countries[i] ].label );
+                }
+
+                let data = {
+                    ...vm.form,
+                    isolation_type_id: 1,
+                    selected_country_names,
+                }
+                console.log(data);
             }
         },
     })

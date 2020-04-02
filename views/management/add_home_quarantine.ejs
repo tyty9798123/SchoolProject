@@ -16,7 +16,20 @@
         <div class="col-6">
             <el-input v-model="form.name" placeholder="姓名（必填）"></el-input>
             <hr>
-            <span>年齡： </span><el-input-number v-model="form.age" :min="0" :max="120" label="年齡（必填）"></el-input-number>
+            <div class="row">
+                <div class="col-6">
+                    <span class="demonstration">生日：</span>
+                    <el-date-picker
+                      v-model="form.birthday"
+                      type="date"
+                      @input="changeBirthday"
+                      placeholder="選擇日期">
+                    </el-date-picker>
+                </div>
+                <div class="col-6">
+                    <span>年齡： </span><el-input-number v-model="form.age" :min="0" :max="120" label="年齡（必填）"></el-input-number>
+                </div>
+            </div>            
             <hr>
             <el-input v-model="form.identification" placeholder="身分證字號（供有戶籍國民在國內填用）"></el-input>
             <hr>
@@ -25,15 +38,7 @@
             性別：
             <el-radio v-model="form.gender" label="1">男生</el-radio>
             <el-radio v-model="form.gender" label="2">女生</el-radio>
-            <hr>
-            <div class="block">
-                <span class="demonstration">生日：</span>
-                <el-date-picker
-                  v-model="form.birthday"
-                  type="date"
-                  placeholder="選擇日期">
-                </el-date-picker>
-            </div>
+            
             <hr>
             <el-input type="textarea" v-model="form.mailing_address" placeholder="通訊地址" ></el-input>
             <hr>
@@ -181,7 +186,38 @@
                     }
                 })
                 
-            }
+            },
+            changeBirthday() {
+                let vm = this;
+                let target = new Date(vm.form.birthday).getTime();
+                let second = (Date.now() - target) / 1000 >> 0;
+                let years = vm.dateDistance(second);
+                if ( years != 'ERROR' ) {
+                    vm.form.age = years / 365 >> 0;
+                }
+                else{
+                    alert('生日輸入有誤，請重新填入。');
+                    vm.form.birthday = '';
+                }
+            },
+            dateDistance(x) {
+                var day = x / 86400 >> 0;
+                var hour;
+                if (x < 86400) {
+                    hour = x / 3600 >> 0;
+                } 
+                else {
+                    hour = x % 86400 / 3600 >> 0;
+                }
+                var minute = x % 3600 / 60 >> 0;
+                var second = x % 60;
+
+                if (second >= 0) {
+                    return day
+                } else {
+                    return "ERROR";
+                }
+            },
         },
     })
 </script>

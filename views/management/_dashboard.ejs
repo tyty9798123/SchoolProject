@@ -155,15 +155,24 @@
                         }
                         //性別
                         item.gender = item.gender == 1 ? "男性" : "女性";
-                        //生日
-                        item.birthday = vm.datetimeConvert(item.birthday);
                         //出境/入境日期
                         item.departure_date = vm.datetimeConvert(item.departure_date);
                         item.entry_date = vm.datetimeConvert(item.entry_date);
                         //檢疫起始日/檢疫結束日
                         item.isolationData.start_date = vm.datetimeConvert(item.isolationData.start_date);
                         item.isolationData.end_date = vm.datetimeConvert(item.isolationData.end_date);
-
+                        //過濾年齡
+                        let _target = new Date(item.birthday).getTime();
+                        let _second = (Date.now() - _target) / 1000 >> 0;
+                        let years = vm.dateDistance(_second);
+                        if ( years != 'ERROR' ) {
+                            item.age = years / 365 >> 0;
+                        }
+                        else{
+                            item.age = "錯誤。"
+                        }
+                        //生日
+                        item.birthday = vm.datetimeConvert(item.birthday);
                         return {
                             ...item,
                             remainingTime,
@@ -210,7 +219,25 @@
                     min = "0" + min;
                 }
                 return year + '-' + month + '-' + date + ' '
-            }
+            },
+            dateDistance(x) {
+                var day = x / 86400 >> 0;
+                var hour;
+                if (x < 86400) {
+                    hour = x / 3600 >> 0;
+                } 
+                else {
+                    hour = x % 86400 / 3600 >> 0;
+                }
+                var minute = x % 3600 / 60 >> 0;
+                var second = x % 60;
+
+                if (second >= 0) {
+                    return day
+                } else {
+                    return "ERROR";
+                }
+            },
         }
     })
 

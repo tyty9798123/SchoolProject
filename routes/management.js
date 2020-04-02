@@ -12,4 +12,11 @@ router.post('/', managementController.create);
 
 router.get('/get_all_isolator_info', managementController.getAllIsolatorInfo);
 
+router.get('/maps', function(req, res) {
+  let auth = req.session.uid;
+  res.render('./management/maps/index.ejs', {
+    title: 'Maps',
+    auth,
+  })
+})
 module.exports = router;

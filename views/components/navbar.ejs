@@ -38,16 +38,15 @@
         },
         created(){
             var vm = this;
-            switch(window.location.pathname){
-                case "/signup":
-                    vm.activeIndex = "2-1";
-                    break;
-                case "/login":
-                    vm.activeIndex = "2-2";
-                    break;
-                case "/management":
-                    vm.activeIndex = "4";
-                    break;
+            let pathName = window.location.pathname;
+            if ( pathName.includes('signup') ){
+                vm.activeIndex = "2-1";
+            }
+            else if ( pathName.includes('login') ){
+                vm.activeIndex = "2-2";
+            }
+            else if ( pathName.includes('management') ){
+                vm.activeIndex = "4";
             }
         },
         methods: {

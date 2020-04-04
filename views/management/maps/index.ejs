@@ -31,8 +31,6 @@
         shadowSize: [41, 41]
     });
 
-    var markers = new L.MarkerClusterGroup().addTo(map);;
-
     var xhr = new XMLHttpRequest();
     xhr.open("get","/management/get_all_isolator_info");
     xhr.send();
@@ -40,6 +38,7 @@
         console.log(JSON.parse(xhr.responseText))
         var data = JSON.parse(xhr.responseText)
         if ( getUrlParameter('id') == "" ){
+            var markers = new L.MarkerClusterGroup().addTo(map);;
             //顯示全部
             for(let i =0;data.length>i;i++){
                 if (!data[i].longitude){
@@ -68,19 +67,16 @@
                     isolatorIndex = index;
                 }
             });
-            map.panTo(new L.LatLng(data[isolatorIndex].latitude, data[isolatorIndex].longitude));
 
             let str = `姓名: ${data[isolatorIndex].name} <br> 地址: <a href="https://www.google.com/maps/place/${data[isolatorIndex].mailing_address}" target='_blank'>${data[isolatorIndex].mailing_address}</a>`;
-            markers.addLayer(
-                L.marker(
-                    [data[isolatorIndex].latitude,data[isolatorIndex].longitude], {icon: greenIcon}
-                )
-                .bindPopup(str)
-            );
+            L.marker(
+                [data[isolatorIndex].latitude,data[isolatorIndex].longitude], {icon: greenIcon}
+            ).addTo(map).bindPopup(str).openPopup()
+            map.panTo(new L.LatLng(data[isolatorIndex].latitude, data[isolatorIndex].longitude));
+
             // add more markers here...
             // L.marker().addTo(map)
             //   )
-            map.addLayer(markers);
         }
     }
         

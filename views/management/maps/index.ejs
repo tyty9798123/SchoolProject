@@ -15,8 +15,11 @@
 </div>
 
 <script>
+
+
+
     var map = L.map('map', {
-        center: [22.604799,120.2976256],
+        center: [25.0768252,121.3886134],
         zoom: 16
     });
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -34,17 +37,27 @@
     var markers = new L.MarkerClusterGroup().addTo(map);;
 
     var xhr = new XMLHttpRequest();
-    xhr.open("get","https://raw.githubusercontent.com/kiang/pharmacies/master/json/points.json");
+    xhr.open("get","/management/get_all_isolator_info");
     xhr.send();
     xhr.onload = function(){
-        var data = JSON.parse(xhr.responseText).features
+        console.log(JSON.parse(xhr.responseText))
+
+        var data = JSON.parse(xhr.responseText)
         for(let i =0;data.length>i;i++){
-        
-            markers.addLayer(L.marker([data[i].geometry.coordinates[1],data[i].geometry.coordinates[0]], {icon: greenIcon}).bindPopup(data[i].properties.name));
+            if (!data[i].longitude){
+                continue;
+            }
+            markers.addLayer(
+                L.marker(
+                    [data[i].latitude,data[i].longitude], {icon: greenIcon}
+                )
+                .bindPopup(data[i].name)
+            );
             // add more markers here...
             // L.marker().addTo(map)
             //   )
         }
         map.addLayer(markers);
+        
     }
 </script>

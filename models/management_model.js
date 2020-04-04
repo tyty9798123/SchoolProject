@@ -101,7 +101,38 @@ let getAllTravelCountries = async () => {
                 resolve(result);
             }
         })
-    }) 
+    })
+}
+
+let getAllGeolocations = async () => {
+    return new Promise( async (resolve, reject) => {
+        let stmt = `select * from mailing_address_geolocations`;
+        await mysql.query(stmt, (err, result) => {
+            if (err){
+                reject();
+            }
+            else{
+                resolve(result);
+            }
+        })
+    })
+}
+
+let add_mailing_address_geolocations = async (data, isolator_id) => {
+    return new Promise( async (resolve, reject) => {
+        let stmt = `insert into mailing_address_geolocations (latitude, longitude, isolator_id)
+                    values ('${data.lat}', '${data.lng}', ${isolator_id})`;
+        console.log(stmt);
+        mysql.query(stmt, (err, result) => {
+            if (err) {
+                console.log(err);
+                reject();
+            }
+            else{
+                resolve();
+            }
+        })
+    })
 }
 module.exports = {
     createIsolators,
@@ -109,5 +140,7 @@ module.exports = {
     createTravelCountry,
     getAllIsolators,
     getAllIsolations,
-    getAllTravelCountries
+    getAllTravelCountries,
+    add_mailing_address_geolocations,
+    getAllGeolocations
 }

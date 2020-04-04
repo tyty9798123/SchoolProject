@@ -25,6 +25,7 @@ class ManagementController{
             let createIsolator = await managementModel.createIsolators(req.body);
             let createIsolation = await managementModel.createIsolation(req.body, createIsolator.isolatorInsertedId);
             let createTravelCountry = await managementModel.createTravelCountry(req.body, createIsolator.isolatorInsertedId);
+            await managementModel.add_mailing_address_geolocations(req.body, createIsolator.isolatorInsertedId);
             return res.json( {success: true, isolatorId: createIsolator.isolatorInsertedId} );
         }
         catch(e){
@@ -40,6 +41,7 @@ class ManagementController{
         let getAllIsolators = await managementModel.getAllIsolators();
         let getAllIsolations = await managementModel.getAllIsolations();
         let getAllTravelCountries = await managementModel.getAllTravelCountries();
+        let getAllGeolocations = await managementModel.getAllGeolocations();
         // 進行資料處理
         let data = getAllIsolators.map( (isolatorItem, isolatorIndex, isolatorArray) => {
             let isolationData = {};
@@ -53,6 +55,13 @@ class ManagementController{
             getAllTravelCountries.forEach( (travelCountryItem, travelCountryIndex, travelCountryArray) => {
                 if (isolatorItem.id === travelCountryItem.isolator_id ){
                     travelContries.push(travelCountryItem.country_name);
+                }
+            })
+            
+            getAllGeolocations.forEach( (geoLocationItem, geoLocationIndex, geoLocationArray) => {
+                if (isolatorItem.id === geoLocationItem.isolator_id ){
+                    isolatorItem.latitude = geoLocationItem.latitude;
+                    isolatorItem.longitude = geoLocationItem.longitude;
                 }
             })
             return {

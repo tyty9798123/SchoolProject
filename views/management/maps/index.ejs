@@ -38,26 +38,58 @@
     xhr.send();
     xhr.onload = function(){
         console.log(JSON.parse(xhr.responseText))
-
         var data = JSON.parse(xhr.responseText)
-        for(let i =0;data.length>i;i++){
-            if (!data[i].longitude){
-                continue;
-            }
-            let str = `姓名: ${data[i].name} <br> 地址: <a href="https://www.google.com/maps/place/${data[i].mailing_address}" target='_blank'>${data[i].mailing_address}</a>`;
+        if ( getUrlParameter('id') == "" ){
+            //顯示全部
+            for(let i =0;data.length>i;i++){
+                if (!data[i].longitude){
+                    continue;
+                }
+                let str = `姓名: ${data[i].name} <br> 地址: <a href="https://www.google.com/maps/place/${data[i].mailing_address}" target='_blank'>${data[i].mailing_address}</a>`;
 
+                markers.addLayer(
+                    L.marker(
+                        [data[i].latitude,data[i].longitude], {icon: greenIcon}
+                    )
+                    .bindPopup(str)
+                        
+                );
+                // add more markers here...
+                // L.marker().addTo(map)
+                //   )
+            }
+            map.addLayer(markers);
+        }
+        else {
+            let id = getUrlParameter('id');
+            let isolatorIndex;
+            data.forEach( (item, index, array) => {
+                if (item.id == id){
+                    isolatorIndex = index;
+                }
+            });
+            map.panTo(new L.LatLng(data[isolatorIndex].latitude, data[isolatorIndex].longitude));
+
+            let str = `姓名: ${data[isolatorIndex].name} <br> 地址: <a href="https://www.google.com/maps/place/${data[isolatorIndex].mailing_address}" target='_blank'>${data[isolatorIndex].mailing_address}</a>`;
             markers.addLayer(
                 L.marker(
-                    [data[i].latitude,data[i].longitude], {icon: greenIcon}
+                    [data[isolatorIndex].latitude,data[isolatorIndex].longitude], {icon: greenIcon}
                 )
                 .bindPopup(str)
-                    
             );
             // add more markers here...
             // L.marker().addTo(map)
             //   )
+            map.addLayer(markers);
         }
-        map.addLayer(markers);
-        
     }
+        
+    
+
+    function getUrlParameter(name) {
+        name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+        var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+        var results = regex.exec(location.search);
+        return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+    };
 </script>

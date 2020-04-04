@@ -15,9 +15,6 @@
 </div>
 
 <script>
-
-
-
     var map = L.map('map', {
         center: [25.0768252,121.3886134],
         zoom: 16
@@ -47,11 +44,14 @@
             if (!data[i].longitude){
                 continue;
             }
+            let str = `姓名: ${data[i].name} <br> 地址: <a href="https://www.google.com/maps/place/${data[i].mailing_address}" target='_blank'>${data[i].mailing_address}</a>`;
+
             markers.addLayer(
                 L.marker(
                     [data[i].latitude,data[i].longitude], {icon: greenIcon}
                 )
-                .bindPopup(data[i].name)
+                .bindPopup(str)
+                    
             );
             // add more markers here...
             // L.marker().addTo(map)

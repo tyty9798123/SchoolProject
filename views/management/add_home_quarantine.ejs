@@ -110,7 +110,7 @@
         <el-button type="primary" @click="submit();">送出</el-button>
     </div>
 </div>
-
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyChEMn4cC74ENoYa870PqThqwyUHzH56bs"></script>
 <script>
     let add_home_quarantine = new Vue({
         el: "#add_home_quarantine",
@@ -158,31 +158,47 @@
             },
             submit(){
                 let vm = this;
-                let selected_country_names = [];
-                for (let i = 0; i < vm.form.selected_countries.length; i++){
-                    selected_country_names.push( vm.all_countries[ vm.form.selected_countries[i] ].label );
-                }
+                // 先取得座標
+                var geocoder = new google.maps.Geocoder();
+                let info = geocoder.geocode({
+                    address: vm.form.mailing_address
+                }, function(results, status){
+                    if ( status === google.maps.GeocoderStatus.OK ) {
+                        let lat = results[0].geometry.location.lat();
+                        let lng = results[0].geometry.location.lng();
+                        let selected_country_names = [];
+                        for (let i = 0; i < vm.form.selected_countries.length; i++){
+                            selected_country_names.push( vm.all_countries[ vm.form.selected_countries[i] ].label );
+                        }
 
-                let data = {
-                    ...vm.form,
-                    isolation_type_id: 1,
-                    selected_country_names,
-                }
-
-                axios.post('/management', data)
-                .then( (res) => {
-                    if (res.data.success){
-                        this.$notify({
-                            title: '成功',
-                            message: `新增成功，編號${res.data.isolatorId}。`,
-                            type: 'success'
-                        });
+                        let data = {
+                            ...vm.form,
+                            isolation_type_id: 1,
+                            selected_country_names,
+                            lat,
+                            lng
+                        }
+                        console.log(data)
+                        axios.post('/management', data)
+                        .then( (res) => {
+                            if (res.data.success){
+                                vm.$notify({
+                                    title: '成功',
+                                    message: `新增成功，編號${res.data.isolatorId}。`,
+                                    type: 'success'
+                                });
+                            }
+                            else{
+                                vm.$notify.error({
+                                    title: '錯誤',
+                                    message: `新增失敗，${res.data.message}`
+                                });
+                            }
+                        })
                     }
                     else{
-                        vm.$notify.error({
-                            title: '錯誤',
-                            message: `新增失敗，${res.data.message}`
-                        });
+                        alert('error');
+                        return;
                     }
                 })
                 

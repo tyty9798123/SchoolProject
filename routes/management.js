@@ -6,7 +6,7 @@ managementController = new managementController();
 
 router.get('/', function(req, res, next) {
   let auth = req.session.uid;
-  res.render('./management/index.ejs', { title: 'Express', auth});
+  res.render('./management/index.ejs', { title: '管理', auth});
 });
 router.post('/', managementController.create);
 

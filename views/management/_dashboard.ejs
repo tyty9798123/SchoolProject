@@ -11,7 +11,7 @@
     margin-bottom: 0;
     width: 50%;
   }
-  #show_or_hide_map{
+  #hide_map {
       height: 40px;
       width: 100%;
       background-color: #fff;
@@ -22,18 +22,37 @@
       border: 1px solid #DDDDDD;
       margin-bottom: 5px;
   }
-  #show_or_hide_map:hover {
+  #hide_map:hover {
+      background-color: #f9fafc; /*f9fafc*/
+      border: 1px solid #5599FF;
+      color: #5599FF;
+  }
+  #show_map {
+      height: 40px;
+      width: 100%;
+      background-color: #fff;
+      text-align: center;
+      transition: all 0.5s;
+      border-radius: 5px;
+      color: #444444;
+      border: 1px solid #DDDDDD;
+      margin-bottom: 5px;
+  }
+  #show_map:hover {
       background-color: #f9fafc; /*f9fafc*/
       border: 1px solid #5599FF;
       color: #5599FF;
   }
 </style>
 <div id="dashboard">
-    <div id="show_or_hide_map">
+    <div id="hide_map">
         <i class="el-icon-caret-bottom" style="font-size: 24px; margin-top: 5px;"></i>隱藏地圖
     </div>
     <iframe src="/management/maps/" class="sticky-top" id="iframe" width="100%" height="350px" frameborder="0" scrolling="no">
     </iframe>
+    <div id="show_map" style="display:none">
+        <i class="el-icon-caret-bottom" style="font-size: 24px; margin-top: 5px;" ></i>顯示地圖
+    </div>
     <hr>
     <div class="text-center" v-if="!dataLoaded">
         <%- include ../components/spinner1.ejs %>
@@ -115,11 +134,13 @@
     </el-table-column>
     <el-table-column
         label="年齡"
-        prop="age">
+        prop="age"
+        width="150px">
     </el-table-column>
     <el-table-column
         label="通訊地址"
-        prop="mailing_address">
+        prop="mailing_address"
+        width="300px">
     </el-table-column>
     <el-table-column
         label="聯絡電話"
@@ -269,20 +290,43 @@
 
 
     $(document).ready(function(){
-        $('#show_or_hide_map').hover( function(){
-            $('#show_or_hide_map').html(
+        $('#hide_map').hover( function(){
+            $('#hide_map').html(
                 `<i class="el-icon-caret-top" style="font-size: 24px; margin-top: 5px;"></i>`+
                 `隱藏地圖`
             )
         })
-        $('#show_or_hide_map').mouseleave( function(){
-            $('#show_or_hide_map').html(
-                `<i class="el-icon-caret-bottom" style="font-size: 24px; margin-top: 5px;"></i>`+
+        $('#hide_map').mouseleave( function(){
+            $('#hide_map').html(
+                `<i class="el-icon-caret-top" style="font-size: 24px; margin-top: 5px;"></i>`+
+                `隱藏地圖`
+            )
+        })
+        $('#hide_map').click( function(){
+            $('#iframe').slideToggle("fast");
+            $('#hide_map').hide();
+            $('#show_map').show();
+        })
+    })
+
+    $(document).ready(function(){
+        $('#show_map').hover( function(){
+            $('#show_map').html(
+                `<i class="el-icon-caret-top" style="font-size: 24px; margin-top: 5px;"></i>`+
                 `顯示地圖`
             )
         })
-        $('#show_or_hide_map').click( function(){
+        $('#show_map').mouseleave( function(){
+            $('#show_map').html(
+                `<i class="el-icon-caret-top" style="font-size: 24px; margin-top: 5px;"></i>`+
+                `顯示地圖`
+            )
+        })
+        $('#show_map').click( function(){
             $("#iframe").slideToggle("fast");
+            $('#show_map').hide();
+            $('#hide_map').show();
         })
     })
 </script>
+

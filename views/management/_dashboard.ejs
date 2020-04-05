@@ -29,29 +29,20 @@
   }
 </style>
 <div id="dashboard">
-    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-    <h1 class="h2">Dashboard</h1>
-    <div class="btn-toolbar mb-2 mb-md-0">
-        <div class="btn-group mr-2">
-        <button type="button" class="btn btn-sm btn-outline-secondary">Share</button>
-        <button type="button" class="btn btn-sm btn-outline-secondary">Export</button>
-        </div>
-        <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
-        <span data-feather="calendar"></span>
-        This week
-        </button>
-    </div>
-    </div>
     <div id="show_or_hide_map">
         <i class="el-icon-caret-bottom" style="font-size: 24px; margin-top: 5px;"></i>隱藏地圖
     </div>
-    <iframe src="/management/maps/" class="sticky-top" id="iframe" width="100%" height="500px" frameborder="0" scrolling="no">
+    <iframe src="/management/maps/" class="sticky-top" id="iframe" width="100%" height="350px" frameborder="0" scrolling="no">
     </iframe>
     <hr>
+    <div class="text-center" v-if="!dataLoaded">
+        <%- include ../components/spinner1.ejs %>
+    </div>
     <el-table
     :data="tableData"
     style="width: 100%"
     @expand-change="expandChange"
+    v-if="dataLoaded"
     >
     <el-table-column type="expand">
         <template slot-scope="props">
@@ -145,7 +136,8 @@
     new Vue({
         el: '#dashboard',
         data: {
-            tableData: []
+            tableData: [],
+            dataLoaded: false
         },
         created() {
             let vm = this;
@@ -156,6 +148,7 @@
                 let vm = this;
                 axios.get('/management/get_all_isolator_info')
                 .then( (res) => {
+                    vm.dataLoaded = true;
                     let data = res.data;
                     let newData = data.map( (item, index, array) => {
                         //時間

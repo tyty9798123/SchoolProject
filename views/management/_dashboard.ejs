@@ -45,13 +45,22 @@
   }
 </style>
 <div id="dashboard">
-    <div id="hide_map">
-        <i class="el-icon-caret-bottom" style="font-size: 24px; margin-top: 5px;"></i>隱藏地圖
-    </div>
-    <iframe src="/management/maps/" class="sticky-top" id="iframe" width="100%" height="350px" frameborder="0" scrolling="no">
-    </iframe>
-    <div id="show_map" style="display:none">
-        <i class="el-icon-caret-bottom" style="font-size: 24px; margin-top: 5px;" ></i>顯示地圖
+    <div class="row">
+        <div class="col-4">
+            篩選條件區塊...未完工。
+        </div>
+        <div class="col-8">
+            <div>
+                <iframe src="/management/maps/" id="iframe" width="100%" height="350px" frameborder="0" scrolling="no">
+                </iframe>
+                <div id="show_map" style="display:none">
+                    <i class="el-icon-caret-bottom" style="font-size: 24px; margin-top: 5px;" ></i>顯示地圖
+                </div>
+                <div id="hide_map">
+                    <i class="el-icon-caret-top" style="font-size: 24px; margin-top: 5px;"></i>隱藏地圖
+                </div>
+            </div>
+        </div>
     </div>
     <hr>
     <div class="text-center" v-if="!dataLoaded">

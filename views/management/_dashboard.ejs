@@ -46,10 +46,7 @@
 </style>
 <div id="dashboard">
     <div class="row">
-        <div class="col-4">
-            篩選條件區塊...未完工。
-        </div>
-        <div class="col-8">
+        <div class="col-12">
             <div>
                 <iframe src="/management/maps/" id="iframe" width="100%" height="350px" frameborder="0" scrolling="no">
                 </iframe>
@@ -60,7 +57,25 @@
                     <i class="el-icon-caret-top" style="font-size: 24px; margin-top: 5px;"></i>隱藏地圖
                 </div>
             </div>
+            <hr>
+            <div class="row">
+                <div class="col-3">
+                    <span class="mr-3">根據ID查詢：</span>
+                    <el-input-number v-model="search_id"controls-position="right"></el-input-number>
+                </div>
+                <div class="col-9">
+                    <el-input
+                        type="textarea"
+                        autosize
+                        placeholder="全文檢索"
+                        @input="fullTextSearchChanged"
+                        v-model="full_text_search">
+                    </el-input>
+                </div>
+            </div>
         </div>
+        <hr>
+
     </div>
     <hr>
     <div class="text-center" v-if="!dataLoaded">
@@ -167,7 +182,10 @@
         el: '#dashboard',
         data: {
             tableData: [],
-            dataLoaded: false
+            cacheTableData: '',
+            dataLoaded: false,
+            full_text_search: '',
+            search_id: 0
         },
         created() {
             let vm = this;
@@ -222,8 +240,8 @@
                             remainingTime,
                         }
                     });
-                    console.log(newData)
                     vm.tableData = newData;
+                    vm.cacheTableData = newData;
                 })
                 .catch( () => alert('讀取資料失敗。') );
             },
@@ -293,6 +311,39 @@
                 if (!changed){
                     document.getElementById("iframe").src = `/management/maps`;
                 }
+            },
+            fullTextSearchChanged(){
+                let vm = this;
+                let subText = vm.full_text_search.trim();
+                vm.tableData = [];
+                vm.cacheTableData.forEach((item, index, array) => {
+                    Object.values(item).some( (_item, _index, _array) =>{
+                        _item = String(_item);
+                        if(_item.includes(subText)){
+                            vm.tableData.push(vm.cacheTableData[index]);
+                            return true;
+                        }
+                    })
+                })   
+            },
+            searchByID(){
+            }
+        },
+        watch: {
+            search_id: function(){
+                let vm = this;
+                let search_id = vm.search_id;
+                if ( Number(search_id) <= 0 ){
+                    vm.tableData = vm.cacheTableData;
+                    return;
+                }
+                vm.tableData = [];
+                vm.cacheTableData.some( (item, index, array) => {
+                    if (item.id == search_id){
+                        vm.tableData.push(item);
+                        return true;
+                    }
+                })
             }
         }
     })

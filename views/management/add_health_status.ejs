@@ -1,1 +1,74 @@
-1231231
+<style>
+    .form-disabled{
+        border: 1px solid red;
+    }
+</style>
+<div id="add_health_status" style="display: none;">
+    <div class="row">
+        <div class="col-6">
+            <div class="row">
+                <div class="col-6">
+                    <input type="text" class="form-control" :class="{ 'form-disabled': !checkJustNumber_AM }" v-model="form.temperature_am" >
+                </div>
+                <div class="col-6">
+                    <input type="text" class="form-control" :class="{ 'form-disabled': !checkJustNumber_PM }" v-model="form.temperature_pm">
+                </div>
+            </div>
+        </div>
+        <div class="col-6">
+
+        </div>
+    </div>
+</div>
+
+<script>
+    new Vue({
+        el: "#add_health_status",
+        data: {
+            form: {
+                temperature_am: '',
+                temperature_pm: ''
+            },
+        },
+        computed: {
+            checkJustNumber_AM(){
+                let vm = this;
+                value = vm.form.temperature_am;
+                let allowArray = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "."];
+                value = value.split('');
+                let dotCount = 0;
+                for( let i = 0; i < value.length; i++ ){
+                    if ( !allowArray.includes(value[i]) ){
+                        return false;
+                    }
+                    if ( value[i] == '.' ){
+                        dotCount++;
+                    }
+                }
+                if (dotCount > 1){
+                    return false;
+                }
+                return true;
+            },
+            checkJustNumber_PM(){
+                let vm = this;
+                value = vm.form.temperature_pm;
+                let allowArray = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "."];
+                value = value.split('');
+                let dotCount = 0;
+                for( let i = 0; i < value.length; i++ ){
+                    if ( !allowArray.includes(value[i]) ){
+                        return false;
+                    }
+                    if ( value[i] == '.' ){
+                        dotCount++;
+                    }
+                }
+                if (dotCount > 1){
+                    return false;
+                }
+                return true;
+            }
+        }
+    })
+</script>

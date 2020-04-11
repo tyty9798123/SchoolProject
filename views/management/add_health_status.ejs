@@ -8,10 +8,10 @@
         <div class="col-6">
             <div class="row">
                 <div class="col-6">
-                    <input type="text" class="form-control" :class="{ 'form-disabled': !checkJustNumber_AM }" v-model="form.temperature_am" >
+                    <input type="text" placeholder="體溫（上午）" class="form-control" :class="{ 'form-disabled': !checkJustNumber_AM }" v-model="form.temperature_am" >
                 </div>
                 <div class="col-6">
-                    <input type="text" class="form-control" :class="{ 'form-disabled': !checkJustNumber_PM }" v-model="form.temperature_pm">
+                    <input type="text" placeholder="體溫（下午）" class="form-control" :class="{ 'form-disabled': !checkJustNumber_PM }" v-model="form.temperature_pm">
                 </div>
             </div>
         </div>
@@ -27,47 +27,44 @@
         data: {
             form: {
                 temperature_am: '',
-                temperature_pm: ''
+                temperature_pm: '',
             },
+            allowNumberChars: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "."],
+        },
+        methods: {
+            checkJustNumberAndDot(value){
+                //若為空
+                if (value.length <=0) 
+                    return false;
+                //若第一個或最後一個為.
+                if (value[0] === '.' || value[value.length -1 ] === '.' ){
+                    return false;
+                }
+                let dotCount = 0;
+                for( let i = 0; i < value.length; i++ ){
+                    if ( !this.allowNumberChars.includes(value[i]) ){
+                        return false;
+                    }
+                    if ( value[i] == '.' ){
+                        dotCount++;
+                    }
+                }
+                if (dotCount > 1){
+                    return false;
+                }
+                return true;
+            }
         },
         computed: {
             checkJustNumber_AM(){
                 let vm = this;
-                value = vm.form.temperature_am;
-                let allowArray = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "."];
-                value = value.split('');
-                let dotCount = 0;
-                for( let i = 0; i < value.length; i++ ){
-                    if ( !allowArray.includes(value[i]) ){
-                        return false;
-                    }
-                    if ( value[i] == '.' ){
-                        dotCount++;
-                    }
-                }
-                if (dotCount > 1){
-                    return false;
-                }
-                return true;
+                value = vm.form.temperature_am.split('');
+                return vm.checkJustNumberAndDot(value);
             },
             checkJustNumber_PM(){
                 let vm = this;
-                value = vm.form.temperature_pm;
-                let allowArray = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "."];
-                value = value.split('');
-                let dotCount = 0;
-                for( let i = 0; i < value.length; i++ ){
-                    if ( !allowArray.includes(value[i]) ){
-                        return false;
-                    }
-                    if ( value[i] == '.' ){
-                        dotCount++;
-                    }
-                }
-                if (dotCount > 1){
-                    return false;
-                }
-                return true;
+                value = vm.form.temperature_pm.split('');
+                return vm.checkJustNumberAndDot(value);
             }
         }
     })

@@ -14,16 +14,21 @@
                     <input type="text" placeholder="體溫（下午）" class="form-control" :class="{ 'form-disabled': !checkJustNumber_PM }" v-model="form.temperature_pm">
                 </div>
                 <div style="margin-top: 20px">
+                 症狀:
                     <el-checkbox-group v-model="checkboxGroup1" size="small"></el-checkbox-group>
                        <template v-for="(item, index) in types">
                         <el-checkbox  :label="item.type_name" border size="medium"></el-checkbox>
                        </template>
                     </el-checkbox>
                 </div>
+                <div class="col-12">
+                備註:
+                <el-input type="textarea"  :rows="5"  placeholder="请输入内容" v-model="textarea"></el-input>
+                </div>
             </div>
         </div>
         <div class="col-6">
-
+        
         </div>
     </div>
 </div>

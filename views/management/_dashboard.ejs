@@ -43,6 +43,13 @@
       border: 1px solid #5599FF;
       color: #5599FF;
   }
+  .el-icon-refresh{
+      transition: all 0.5s;
+  }
+  .el-icon-refresh:hover{
+    color: red;
+    font-size: 36px !important;
+  }
 </style>
 <div id="dashboard">
     <div class="row">
@@ -59,14 +66,24 @@
             </div>
             <hr>
             <div class="row">
-                <div class="col-3">
-                    <span class="mr-3">根據ID查詢：</span>
-                    <el-input-number v-model="search_id"controls-position="right"></el-input-number>
+                <div class="col-1">
+                    <div class="text-center">
+                        <el-tooltip class="item" effect="dark" content="重新讀取" placement="right">
+                            <i class="el-icon-refresh mt-2" @click="refreshTableData()" style="font-size: 24px;" aria-hidden="true"></i>
+                        </el-tooltip>
+                    </div>
                 </div>
-                <div class="col-9">
+                <div class="col-5">
+                    <div class="text-center">
+                        <span class="mr-3">根據ID查詢</span>
+                        <el-input-number v-model="search_id"controls-position="right"></el-input-number>
+                    </div>
+                </div>
+                <div class="col-6">
                     <el-input
                         type="textarea"
                         autosize
+                        class="w-100"
                         placeholder="全文檢索"
                         @input="fullTextSearchChanged"
                         v-model="full_text_search">
@@ -326,7 +343,12 @@
                     })
                 })   
             },
-            searchByID(){
+            refreshTableData(){
+                let vm = this;
+                vm.dataLoaded = false;
+                vm.tableData = [];
+                vm.cacheTableData = [];
+                vm.getTableData();
             }
         },
         watch: {

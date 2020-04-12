@@ -20,4 +20,5 @@ router.get('/maps', function(req, res) {
   })
 })
 router.get('/get_all_symptom_types', managementController.getAllSymptomTypes);
+router.post('/add_health_status', managementController.addHealthStatus);
 module.exports = router;

@@ -77,6 +77,28 @@ class ManagementController{
         let allSymptomTypes = await managementModel.getAllSymptomTypes();
         res.send(allSymptomTypes);
     }
+
+    async addHealthStatus(req, res, next){
+        try{
+            let { healthStatusID } = await managementModel.createHealthStatus(req.body);
+            if (req.body.symptomTypes.length > 0){
+                await managementModel.addToHealthSymptoms(req.body, healthStatusID);
+            }
+            return res.send({
+                success: true,
+            })
+        }
+        catch(e){
+            return res.send({
+                success: false,
+                message: '資料插入失敗。',
+            })
+            /*
+                如果新增失敗，把所有關聯全部刪掉，並返回使用者錯誤資訊。
+                機會較少，除非有BUG，或資料庫突然斷開，以後再打。
+            */
+        }
+    }
 }
 
 function checkCreateColumnsAreValid(req, res, next, _type){

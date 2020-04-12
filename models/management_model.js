@@ -136,7 +136,6 @@ let add_mailing_address_geolocations = async (data, isolator_id) => {
     return new Promise( async (resolve, reject) => {
         let stmt = `insert into mailing_address_geolocations (latitude, longitude, isolator_id)
                     values ('${data.lat}', '${data.lng}', ${isolator_id})`;
-        console.log(stmt);
         mysql.query(stmt, (err, result) => {
             if (err) {
                 console.log(err);
@@ -148,6 +147,42 @@ let add_mailing_address_geolocations = async (data, isolator_id) => {
         })
     })
 }
+
+let createHealthStatus = async data => {
+    return new Promise( async (resolve, reject) => {
+        let stmt = `INSERT INTO health_status (isolator_id, temperature, note, caring_at) 
+        values (${data.isolatorID}, '${data.temperature}', '${data.note}', '${ timestamp.datetimeConvert( data.caringTime ) }')`;
+
+        mysql.query(stmt, (err, result) => {
+            if(err){
+                reject();
+            }
+            else{
+                resolve({
+                    healthStatusID: result.insertId
+                })
+            }
+        })
+    })
+}
+
+let addToHealthSymptoms = async (data, id) => {
+    return new Promise( async (resolve, reject) => {
+        for (let i = 0; i < data.symptomTypes.length; i++){
+            let stmt = `
+                Insert into health_symptoms (health_status_id, symptom_type_id) values (${id}, ${data.symptomTypes[i]})
+            `;
+            console.log(stmt)
+            await mysql.query(stmt, function(err, result){
+                if (err) {
+                    console.log(err);
+                    reject();
+                }
+            })
+        }
+        resolve();
+    })
+}
 module.exports = {
     createIsolators,
     createIsolation,
@@ -157,5 +192,7 @@ module.exports = {
     getAllTravelCountries,
     add_mailing_address_geolocations,
     getAllGeolocations,
-    getAllSymptomTypes
+    getAllSymptomTypes,
+    createHealthStatus,
+    addToHealthSymptoms,
 }

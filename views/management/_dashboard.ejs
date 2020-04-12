@@ -157,6 +157,9 @@
             <el-form-item label="備註">
                 <span>{{ props.row.note }}</span>
             </el-form-item>
+            <el-form-item label="健康狀態表">
+                <el-link :href="`/management?current_page=add_health_status?id=${props.row.id}?name=${props.row.name}`" type="primary" target="_blank">點擊新增</el-link>
+            </el-form-item>
         </el-form>
         </template>
     </el-table-column>

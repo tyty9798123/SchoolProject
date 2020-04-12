@@ -15,7 +15,7 @@
                 </div>
                 <div style="margin-top: 20px">
                  症狀:
-                    <el-checkbox-group v-model="checkboxGroup1" size="small"></el-checkbox-group>
+                    <el-checkbox-group v-model="form.checkboxGroup1" size="small"></el-checkbox-group>
                        <template v-for="(item, index) in types">
                         <el-checkbox  :label="item.type_name" border size="medium"></el-checkbox>
                        </template>
@@ -23,7 +23,7 @@
                 </div>
                 <div class="col-12">
                 備註:
-                <el-input type="textarea"  :rows="5"  placeholder="请输入内容" v-model="textarea"></el-input>
+                <el-input type="textarea"  :rows="5"  placeholder="请输入内容" v-model="form.note"></el-input>
                 </div>
             </div>
         </div>
@@ -40,7 +40,8 @@
             form: {
                 temperature_am: '',
                 temperature_pm: '',
-                checkboxGroup1:[]
+                checkboxGroup1:[],
+                note: ''
             },
             types: [],
             allowNumberChars: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "."],

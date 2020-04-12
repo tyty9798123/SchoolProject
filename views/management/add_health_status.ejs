@@ -8,27 +8,51 @@
         <div class="col-6">
             <div class="row">
                 <div class="col-6">
-                    <input type="text" placeholder="體溫（上午）" class="form-control" :class="{ 'form-disabled': !checkJustNumber_AM }" v-model="form.temperature_am" >
+                    <div class="block">
+                        <el-date-picker
+                        class="w-100"
+                        v-model="form.caringTime"
+                        type="datetime"
+                        placeholder="電話關懷時間">
+                        </el-date-picker>
+                    </div>
                 </div>
                 <div class="col-6">
-                    <input type="text" placeholder="體溫（下午）" class="form-control" :class="{ 'form-disabled': !checkJustNumber_PM }" v-model="form.temperature_pm">
+                    <input type="text" placeholder="體溫" class="form-control" :class="{ 'form-disabled': !checkJustNumber }" v-model="form.temperature" >
                 </div>
-                <div style="margin-top: 20px">
-                 症狀:
-                    <el-checkbox-group v-model="form.checkboxGroup1" size="small"></el-checkbox-group>
-                       <template v-for="(item, index) in types">
-                        <el-checkbox  :label="item.type_name" border size="medium"></el-checkbox>
-                       </template>
-                    </el-checkbox>
-                </div>
+            </div>
+            <hr>
+            <div class="row">
                 <div class="col-12">
-                備註:
-                <el-input type="textarea"  :rows="5"  placeholder="请输入内容" v-model="form.note"></el-input>
+                    <div>
+                        疑似症狀：（可複選）
+                        <br><br>
+                        <div class="container">
+                            <div class="row">
+                                <el-checkbox-group v-model="form.checkboxGroup1" size="small" style="margin-top: 3px;">
+                                    <template v-for="(item, index) in types">
+                                        <template v-if="index == 0">
+                                            <el-checkbox  :label="item.type_name" class='col-3' style="margin-left: 10px;" border size="medium"></el-checkbox>
+                                        </template>
+                                        <template v-else>
+                                        <el-checkbox  :label="item.type_name" class='col-3' border size="medium"></el-checkbox>
+                                        </template>
+                                    </template>
+                                </el-checkbox-group>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-12">
+                    <el-input type="textarea"  :rows="5"  placeholder="備註事項" v-model="form.note"></el-input>
                 </div>
             </div>
         </div>
         <div class="col-6">
-        
+            *** 該民眾歷次紀錄顯示區(尚未完工) ***
         </div>
     </div>
 </div>
@@ -38,16 +62,15 @@
         el: "#add_health_status",
         data: {
             form: {
-                temperature_am: '',
-                temperature_pm: '',
+                temperature: '',
                 checkboxGroup1:[],
-                note: ''
+                note: '',
+                caringTime: ''
             },
             types: [],
             allowNumberChars: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "."],
         },
-        created() {            
-        
+        created() {
            let vm=this;
            vm.getAllSymptomType();
         },
@@ -81,18 +104,16 @@
                     vm.types = res.data;
                 })
             },
+            getQueryStringValue (key) {  
+                return decodeURIComponent(window.location.search.replace(new RegExp("^(?:.*[&\\?]" + encodeURIComponent(key).replace(/[\.\+\*]/g, "\\$&") + "(?:\\=([^&]*))?)?.*$", "i"), "$1"));  
+            }
         },
         computed: {
-            checkJustNumber_AM(){
+            checkJustNumber(){
                 let vm = this;
-                value = vm.form.temperature_am.split('');
+                value = vm.form.temperature.split('');
                 return vm.checkJustNumberAndDot(value);
             },
-            checkJustNumber_PM(){
-                let vm = this;
-                value = vm.form.temperature_pm.split('');
-                return vm.checkJustNumberAndDot(value);
-            }
         }
     })
 </script>

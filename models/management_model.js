@@ -118,6 +118,20 @@ let getAllGeolocations = async () => {
     })
 }
 
+let getAllSymptomTypes = async () => {
+    return new Promise( async (resolve, reject) => {
+        let stmt = `select * from symptom_types`;
+        await mysql.query(stmt, (err, result) => {
+            if (err){
+                reject();
+            }
+            else{
+                resolve(result);
+            }
+        })
+    })
+}
+
 let add_mailing_address_geolocations = async (data, isolator_id) => {
     return new Promise( async (resolve, reject) => {
         let stmt = `insert into mailing_address_geolocations (latitude, longitude, isolator_id)
@@ -142,5 +156,6 @@ module.exports = {
     getAllIsolations,
     getAllTravelCountries,
     add_mailing_address_geolocations,
-    getAllGeolocations
+    getAllGeolocations,
+    getAllSymptomTypes
 }

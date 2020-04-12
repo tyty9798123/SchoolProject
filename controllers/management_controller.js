@@ -72,6 +72,11 @@ class ManagementController{
         })
         return res.send(data);
     }
+    async getAllSymptomTypes(req, res, next){
+        console.log(1);
+        let allSymptomTypes = await managementModel.getAllSymptomTypes();
+        res.send(allSymptomTypes);
+    }
 }
 
 function checkCreateColumnsAreValid(req, res, next, _type){

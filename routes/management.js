@@ -19,4 +19,5 @@ router.get('/maps', function(req, res) {
     auth,
   })
 })
+router.get('/get_all_symptom_types', managementController.getAllSymptomTypes);
 module.exports = router;

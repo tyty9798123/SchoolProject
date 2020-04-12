@@ -13,6 +13,13 @@
                 <div class="col-6">
                     <input type="text" placeholder="體溫（下午）" class="form-control" :class="{ 'form-disabled': !checkJustNumber_PM }" v-model="form.temperature_pm">
                 </div>
+                <div style="margin-top: 20px">
+                    <el-checkbox-group v-model="checkboxGroup1" size="small"></el-checkbox-group>
+                       <template v-for="(item, index) in types">
+                        <el-checkbox  :label="item.type_name" border size="medium"></el-checkbox>
+                       </template>
+                    </el-checkbox>
+                </div>
             </div>
         </div>
         <div class="col-6">
@@ -28,8 +35,15 @@
             form: {
                 temperature_am: '',
                 temperature_pm: '',
+                checkboxGroup1:[]
             },
+            types: [],
             allowNumberChars: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "."],
+        },
+        created() {            
+        
+           let vm=this;
+           vm.getAllSymptomType();
         },
         methods: {
             checkJustNumberAndDot(value){
@@ -53,7 +67,14 @@
                     return false;
                 }
                 return true;
-            }
+            },
+            getAllSymptomType(){
+                let vm = this;
+                axios.get('/management/get_all_symptom_types')
+                .then((res) => {
+                    vm.types = res.data;
+                })
+            },
         },
         computed: {
             checkJustNumber_AM(){

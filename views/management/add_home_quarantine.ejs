@@ -142,14 +142,9 @@
         methods: {
             generateCountryData(){
                 let vm = this;
-                axios.get('/country-list.json')
+                axios.get('/get_all_symptom_types')
                 .then((res) => {
                     res.data.forEach( (item, index, array) => {
-                        vm.all_countries.push({
-                            label: item.traditionalName,
-                            key: index,
-                            pinyin: item.traditionalName
-                        })
                     })
                 })
             },

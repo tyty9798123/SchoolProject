@@ -71,6 +71,11 @@
         </div>
         <div class="col-6">
             *** 該民眾歷次紀錄顯示區、溫度狀態表(尚未完工) ***
+            <iframe :src="`/management/personal_temperature?isolator_id=${form.isolatorID}`" id="iframe" width="100%" height="350px" frameborder="0" scrolling="no">
+            </iframe>
+            <div class="text-center">
+                <el-link type="warning" :href="`/management/personal_temperature?isolator_id=${form.isolatorID}`" target="_blank">{{form.isolatorName}}的近期體溫表（近10次登記）</el-link>
+            </div>
         </div>
     </div>
 </div>

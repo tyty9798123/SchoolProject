@@ -8,12 +8,21 @@
         <div class="col-6">
             <div class="row">
                 <div class="col-6">
+                    編號：{{ form.isolatorID }}
+                </div>
+                <div class="col-6">
+                    姓名：{{ form.isolatorName }}
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-6">
                     <div class="block">
                         <el-date-picker
                         class="w-100"
                         v-model="form.caringTime"
                         type="datetime"
-                        placeholder="電話關懷時間">
+                        placeholder="電話關懷時間（必填）">
                         </el-date-picker>
                     </div>
                 </div>
@@ -29,13 +38,16 @@
                         <br><br>
                         <div class="container">
                             <div class="row">
-                                <el-checkbox-group v-model="form.checkboxGroup1" size="small" style="margin-top: 3px;">
+                                <div class="text-center" v-if="isLoading">
+                                    <%- include ../components/spinner1.ejs %>
+                                </div>
+                                <el-checkbox-group v-model="form.checkboxGroup1" size="small" style="margin-top: 3px;" v-if="!isLoading">
                                     <template v-for="(item, index) in types">
                                         <template v-if="index == 0">
-                                            <el-checkbox  :label="item.type_name" class='col-3' style="margin-left: 10px;" border size="medium"></el-checkbox>
+                                            <el-checkbox  :label="`${item.id}.${item.type_name}`" class='col-3' style="margin-left: 10px;" border size="medium"></el-checkbox>
                                         </template>
                                         <template v-else>
-                                        <el-checkbox  :label="item.type_name" class='col-3' border size="medium"></el-checkbox>
+                                        <el-checkbox  :label="`${item.id}.${item.type_name}`" class='col-3' border size="medium"></el-checkbox>
                                         </template>
                                     </template>
                                 </el-checkbox-group>
@@ -50,9 +62,15 @@
                     <el-input type="textarea"  :rows="5"  placeholder="備註事項" v-model="form.note"></el-input>
                 </div>
             </div>
+            <br>
+            <div class="row">
+                <div class="col-12">
+                    <el-button type="primary" class="w-100" plain @click="submit()">新增健康狀態資料</el-button>
+                </div>
+            </div>
         </div>
         <div class="col-6">
-            *** 該民眾歷次紀錄顯示區(尚未完工) ***
+            *** 該民眾歷次紀錄顯示區、溫度狀態表(尚未完工) ***
         </div>
     </div>
 </div>
@@ -65,20 +83,25 @@
                 temperature: '',
                 checkboxGroup1:[],
                 note: '',
-                caringTime: ''
+                caringTime: '',
+                isolatorID: '',
+                isolatorName: '',
             },
             types: [],
+            isLoading: true,
             allowNumberChars: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "."],
         },
-        created() {
+        mounted() {
            let vm=this;
            vm.getAllSymptomType();
+           vm.form.isolatorID = vm.getQueryStringValue('id');
+           vm.form.isolatorName = vm.getQueryStringValue('name');
         },
         methods: {
             checkJustNumberAndDot(value){
                 //若為空
-                if (value.length <=0) 
-                    return false;
+                //if (value.length <=0) 
+                //    return false;
                 //若第一個或最後一個為.
                 if (value[0] === '.' || value[value.length -1 ] === '.' ){
                     return false;
@@ -102,6 +125,50 @@
                 axios.get('/management/get_all_symptom_types')
                 .then((res) => {
                     vm.types = res.data;
+                    vm.isLoading = false;
+                })
+            },
+            submit(){
+                let vm = this;
+                if (!vm.checkJustNumber){
+                    vm.$notify.error({
+                        title: '錯誤',
+                        message: '體溫格式不正確。'
+                    });
+                    return;
+                }
+                if (vm.form.caringTime == ''){
+                    vm.$notify.error({
+                        title: '錯誤',
+                        message: '請輸入電話關心時間。'
+                    });
+                    return;
+                }
+                let symptomTypes = [];
+                for(let i = 0; i < vm.form.checkboxGroup1.length; i++){
+                    symptomTypes.push( vm.form.checkboxGroup1[i].split('.')[0] );
+                }
+                let data = {
+                    isolatorID: vm.form.isolatorID,
+                    caringTime: vm.form.caringTime,
+                    temperature: vm.form.temperature,
+                    symptomTypes,
+                    note: vm.form.note,
+                }
+                axios.post('/management/add_health_status', data)
+                .then(res => {
+                    if (res.data.success){
+                        vm.$notify({
+                            title: '成功',
+                            message: '成功新增健康狀態。',
+                            type: 'success'
+                        });
+                    }else{
+                        vm.$notify.error({
+                            title: '錯誤',
+                            message: res.data.message,
+                        });
+                    }
                 })
             },
             getQueryStringValue (key) {  

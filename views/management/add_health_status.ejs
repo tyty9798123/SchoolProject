@@ -88,6 +88,18 @@
             <div class="text-center">
                 <el-link type="warning" :href="`/management/personal_temperature?isolator_id=${form.isolatorID}`" target="_blank">{{form.isolatorName}}的近期體溫表（近10次登記）</el-link>
             </div>
+            <hr>
+            <el-button type="primary" :loading="loadingData" @click="loadData();">讀取健康狀態資料</el-button>
+            <hr>
+            <el-collapse v-model="activeNames" @change="handleChange">
+                <template v-for="(item, index) in healthStatus.slice().reverse()">
+                <el-collapse-item :title="item.caring_at" :name="index">
+                    <div>體溫：{{ item.temperature }}</div>
+                    <div>出現症狀：{{ item.type_name }}</div>
+                    <div>備註：{{ item.note }}</div>
+                </el-collapse-item>
+                </template>
+            </el-collapse>
         </div>
     </div>
 </div>
@@ -104,9 +116,12 @@
                 isolatorID: '',
                 isolatorName: '',
             },
+            activeNames: ['0'],
             types: [],
             isLoading: true,
             allowNumberChars: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "."],
+            loadingData: false,
+            healthStatus: [],
         },
         mounted() {
            let vm=this;
@@ -187,6 +202,45 @@
                         });
                     }
                 })
+            },
+            handleChange(){
+
+            },
+            loadData(){
+                let vm = this;
+                vm.loadingData = true;
+                axios.get(`/management/get_health_status_by_id?isolator_id=${vm.form.isolatorID}`)
+                .then( (res) => {
+                    let data = res.data;
+                    console.log(data);
+
+                    let caring_at = new Set();
+                    //先把caring_at取出來
+                    for ( let i = 0; i < data.length; i++ ){
+                        if ( !caring_at.has(data[i].caring_at) ){
+                            caring_at.add( data[i].caring_at );
+                        }
+                    }
+                    caring_at = Array.from(caring_at);
+                    let array = [];
+                    for( let i = 0; i < caring_at.length; i++ ){
+                        array[i] = {}
+                        for ( let j = 0; j < data.length; j++ ){
+                            if (caring_at[i] === data[j].caring_at){
+                                array[i] = {
+                                    temperature: data[j].temperature,
+                                    note: data[j].note,
+                                    caring_at: data[j].caring_at,
+                                    type_name: (array[i].type_name || "") + "、" + data[j].type_name
+                                }
+                            }
+                        }
+                        array[i].type_name = array[i].type_name.substr(1)
+                    }
+                    console.log(array);
+                    vm.healthStatus = array;
+                    vm.loadingData = false;
+                });
             },
             getQueryStringValue (key) {  
                 return decodeURIComponent(window.location.search.replace(new RegExp("^(?:.*[&\\?]" + encodeURIComponent(key).replace(/[\.\+\*]/g, "\\$&") + "(?:\\=([^&]*))?)?.*$", "i"), "$1"));  

@@ -73,7 +73,6 @@ class ManagementController{
         return res.send(data);
     }
     async getAllSymptomTypes(req, res, next){
-        console.log(1);
         let allSymptomTypes = await managementModel.getAllSymptomTypes();
         res.send(allSymptomTypes);
     }
@@ -98,6 +97,13 @@ class ManagementController{
                 機會較少，除非有BUG，或資料庫突然斷開，以後再打。
             */
         }
+    }
+    async getHealthStatusById (req, res, next) {
+        //先取得 health status
+        //再取得 symptoms 跟
+        let id = req.query.isolator_id;
+        let data = await managementModel.getHealthStatus(id);
+        return res.send(data);
     }
 }
 

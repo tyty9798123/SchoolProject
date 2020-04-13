@@ -183,6 +183,26 @@ let addToHealthSymptoms = async (data, id) => {
         resolve();
     })
 }
+
+let getHealthStatus = async id => {
+    return new Promise( async (resolve, reject) => {
+        let stmt = `
+            select a.temperature, a.note, a.caring_at, c.type_name 
+            from health_status as a 
+            inner join health_symptoms as b on b.health_status_id = a.id 
+            inner join symptom_types as c on b.symptom_type_id = c.id where a.isolator_id = ${id}`;
+        await mysql.query(stmt, (err, result) => {
+            if (err){
+                reject();
+            }else{
+                result.forEach( (item, index, array) => {
+                    array[index].caring_at = timestamp.datetimeConvert(item.caring_at);
+                })
+                resolve(result);
+            }
+        })
+    })
+}
 module.exports = {
     createIsolators,
     createIsolation,
@@ -195,4 +215,5 @@ module.exports = {
     getAllSymptomTypes,
     createHealthStatus,
     addToHealthSymptoms,
+    getHealthStatus
 }

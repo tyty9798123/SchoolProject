@@ -49,6 +49,7 @@ router.get('/get_recent_temperature_by_id', (req, res, next) => {
 
 router.get('/get_all_symptoms_count', (req, res, next) => {
   //測試使用，先別放進Model、Controller，程式碼少，其實不難管理。
-  
 })
+
+router.get('/get_health_status_by_id', managementController.getHealthStatusById)
 module.exports = router;

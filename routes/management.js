@@ -32,13 +32,13 @@ router.get('/get_recent_temperature_by_id', (req, res, next) => {
   let id = req.query.id;
   //取出最近10筆
   mysql.query(
-    `Select temperature, caring_at from health_status where isolator_id = ${id} order by caring_at asc limit 10`,
+    `Select temperature, caring_at from health_status where isolator_id = ${id} order by caring_at desc limit 10`,
     (err, result) => {
       if(err){
         return res.send( {success: false} );
       }else{
         if (!result[0]) return res.send( {success: false} );
-        result.forEach((item, index, array) => {
+        result.reverse().forEach((item, index, array) => {
           array[index].caring_at = timestamp.datetimeConvert(item.caring_at)
         })
         return res.send( {success: true, result} );

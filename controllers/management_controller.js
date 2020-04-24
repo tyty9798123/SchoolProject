@@ -7,12 +7,13 @@ class ManagementController{
     async create(req, res, next) {
         // 檢查使用者是否有權限。
         if (req.session.uid) {
+            /*
             muser.findOne( {account: req.session.uid})
             .then( function(result) {
                 if (!result.is_admin) {
                     return res.json( {success: false, message: '您並不是管理員。'} );
                 }
-            })
+            })*/
         }else{
             return res.json( {success: false, message: '您尚未登入。'} );
         }

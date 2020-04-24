@@ -19,6 +19,12 @@ class UserController{
     // path /signup
     // Params: name, account, password, captcha_text
     create(req, res, snext){
+        /* 此功能目前關閉 */
+        return res.send({
+            success: false,
+            message: '此功能目前關閉。',
+        })
+        /*
         if (req.session.code !== req.body.captcha_text.toLowerCase()){
             return res.json( { success: false, message: '驗證碼輸入錯誤。' } )
         }
@@ -56,6 +62,7 @@ class UserController{
         else{
             return res.json( { success: false, message: '系統發生錯誤。' } )
         }
+        */
     }
     // method: GET
     // path /login
@@ -75,6 +82,21 @@ class UserController{
     // path: /login
     // Params: account, password
     login(req, res, next){
+        // 登入功能目前關閉，等與前台整合再新增
+        if (req.body.account === 'covid19' && 
+        crypto.createHash('sha256').update(req.body.password).digest('base64') === 'WMxtEDU2lJET9xS+N+d/cgc90dvV1ORy83VWeJEjeis='
+        ){
+            req.session.uid = '0';
+            return res.json({
+                success: true,
+            })
+        }else{
+            return res.json({
+                success: false,
+                message: '帳號或密碼錯誤。',
+            })
+        }
+        /*
         if(req.body.account && req.body.password){
             muser.findOne({
                 account: req.body.account,
@@ -95,6 +117,7 @@ class UserController{
                 }
             })
         }
+        */
     }
 
     logout(req, res, next) {

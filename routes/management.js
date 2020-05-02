@@ -7,7 +7,7 @@ let managementController = require('../controllers/management_controller');
 managementController = new managementController();
 
 router.use((req, res, next) => {
-  if (!req.session.uid){
+  if (req.session.uid != "0"){
     let returnData = `
       <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
       <div class="alert alert-danger" role="alert">

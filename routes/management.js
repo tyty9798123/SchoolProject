@@ -6,6 +6,18 @@ var timestamp = require('../common_lib/timestamp');
 let managementController = require('../controllers/management_controller');
 managementController = new managementController();
 
+router.use((req, res, next) => {
+  if (!req.session.uid){
+    let returnData = `
+      <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+      <div class="alert alert-danger" role="alert">
+      權限不足，<a href='/'>回首頁</a>。
+      </div>
+    `
+    return res.send(returnData);
+  }
+  next();
+})
 router.get('/', function(req, res, next) {
   let auth = req.session.uid;
   res.render('./management/index.ejs', { title: '管理', auth});

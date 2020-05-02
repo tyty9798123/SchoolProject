@@ -1,7 +1,5 @@
 #!/usr/bin/env ruby
 
-p 'Git clone' 
-`ssh root@45.77.130.5 'git clone https://github.com/tyty9798123/SchoolProject' `
 p '到專案資料夾 and git pull'
 `ssh root@45.77.130.5 'cd SchoolProject && git pull'`
 p 'NPM install'

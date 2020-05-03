@@ -5,4 +5,4 @@ p '到專案資料夾 and git pull'
 p 'NPM install'
 `ssh root@45.77.130.5 'cd SchoolProject && npm i' `
 p 'Start Server'
-`ssh root@45.77.130.5 'pm2 rstart 0' `
+`ssh root@45.77.130.5 'pm2 restart 0' `

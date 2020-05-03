@@ -27,8 +27,8 @@ let createAnAccount = (data) => {
     let { account } = data;
     let { password } = data;
     let stmt = `
-        INSERT INTO users (name, account, password, is_admin, sign_in_count)
-        VALUES ('${name}', '${account}', '${password}', 0, 0)
+        INSERT INTO users (name, account, password, is_admin)
+        VALUES ('${name}', '${account}', '${password}', 0)
     `;
     return new Promise( (resolve, reject) => {
         mysql.query(stmt, (err, result) => {
@@ -42,7 +42,35 @@ let createAnAccount = (data) => {
     })
 }
 
+let logIn = (data) => {
+    let { account } = data;
+    let { password } = data;
+    let stmt = `
+        SELECT * FROM users WHERE account = '${account}' and password = '${password}';
+    `;
+    console.log(stmt)
+    return new Promise( (resolve, reject) => {
+        mysql.query(stmt, (err, result) => {
+            if (err) {
+                reject();
+            }
+            else{
+                if (result[0]){
+                    console.log(result)
+                    resolve({
+                        uid: result[0].id
+                    })
+                }
+                else{
+                    reject();
+                }
+            }
+        })
+    })
+}
+
 module.exports = {
     checkAccountNoRepeat,
-    createAnAccount
+    createAnAccount,
+    logIn
 }

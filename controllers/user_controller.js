@@ -46,7 +46,7 @@ class UserController{
             }
             // 確認帳號未重複
             try {
-                muser.checkAccountNoRepeat(account);
+                await muser.checkAccountNoRepeat(account);
             }
             catch(e) {
                 return res.json( { success: false, message: '帳號已被使用。' } );
@@ -54,7 +54,7 @@ class UserController{
             // 插入到資料庫
             try {
                 req.body.password = hashPassword;
-                muser.createAnAccount(req.body);
+                await muser.createAnAccount(req.body);
                 return res.json( { success: true } );
             }
             catch(e) {
@@ -82,43 +82,22 @@ class UserController{
     // method: POST
     // path: /login
     // Params: account, password
-    login(req, res, next){
-        // 登入功能目前關閉，等與前台整合再新增
-        if (req.body.account === 'covid19' && 
-        crypto.createHash('sha256').update(req.body.password).digest('base64') === 'WMxtEDU2lJET9xS+N+d/cgc90dvV1ORy83VWeJEjeis='
-        ){
-            req.session.uid = '0';
-            return res.json({
+    async login(req, res, next){
+        try {
+            req.body.password = crypto.createHash('sha256').update(req.body.password).digest('base64');
+            let { uid } = await muser.logIn(req.body);
+            console.log(uid);
+            req.session.uid = uid;
+            res.json({
                 success: true,
             })
-        }else{
-            return res.json({
+        }
+        catch(e) {
+            res.json({
                 success: false,
-                message: '帳號或密碼錯誤。',
+                message: '帳號或密碼輸入錯誤。',
             })
         }
-        /*
-        if(req.body.account && req.body.password){
-            muser.findOne({
-                account: req.body.account,
-                password: crypto.createHash('sha256').update(req.body.password).digest('base64')
-            })
-            .then(function(result){
-                if(!result){
-                    return res.json({
-                        success: false,
-                        message: '帳號或密碼錯誤。',
-                    })
-                }
-                else{
-                    req.session.uid = result.account;
-                    return res.json({
-                        success: true,
-                    })
-                }
-            })
-        }
-        */
     }
 
     logout(req, res, next) {

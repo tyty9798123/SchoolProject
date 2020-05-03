@@ -98,6 +98,11 @@
               message: '註冊成功，前往登入頁面登入吧！',
               type: 'success'
             });
+            vm.name = ''
+            vm.account = ''
+            vm.password = ''
+            vm.confirmed_password = ''
+            vm.captcha_text = ''
           }
           else{
             vm.$notify.error({
@@ -125,7 +130,7 @@
     computed: {
       check_input_is_valid(){
         let vm = this;
-        if (vm.name.length > 3 && vm.account.length >= 6 && vm.account.length <= 20 
+        if (vm.name.length >= 3 && vm.account.length >= 6 && vm.account.length <= 20 
         && vm.password.length >= 6 && vm.password.length <= 20 && vm.password == vm.confirmed_password
         && vm.captcha_text.length == 5){
           return true;

@@ -7,22 +7,38 @@ let managementController = require('../controllers/management_controller');
 managementController = new managementController();
 
 router.use((req, res, next) => {
-  if (req.session.uid != "0"){
-    /*
-    let returnData = `
-      <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-      <div class="alert alert-danger" role="alert">
-      權限不足，<a href='/'>回首頁</a>。
-      </div>
-    `
-    return res.send(returnData);
-    */
+  if (!req.session.uid){
     return res.render('error_message', {
       title: '錯誤，權限不足。',
-      auth: ''
+      auth: 0
     });
   }
-  next();
+  mysql.query(`SELECT is_admin FROM users WHERE id = ${req.session.uid}`, (err, result) => {
+    if(err) {
+      return res.render('error_message', {
+        title: '資料庫連接失敗。',
+        auth: 0
+      });
+    }
+    else{
+      if (result[0]){
+        if (result[0].is_admin === 1){
+          next();
+        }
+        else {
+          return res.render('error_message', {
+            title: '錯誤，權限不足。',
+            auth: req.session.uid
+          });
+        }
+      }else{
+        return res.render('error_message.ejs', {
+          title: '錯誤，權限不足。',
+          auth: req.session.uid
+        });
+      }
+    }
+  })
 })
 router.get('/', function(req, res, next) {
   let auth = req.session.uid;

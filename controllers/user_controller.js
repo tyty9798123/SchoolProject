@@ -38,11 +38,11 @@ class UserController{
         if ( req.body.name && req.body.account && req.body.password ){
             let name = req.body.name, account = req.body.account, password = req.body.password;
             const hashPassword = crypto.createHash('sha256').update(password).digest('base64');
-            if ( !UserVerify.justInputEngorNum(account) || !UserVerify.justInputEngorNum(password) ){
-                return res.json( { success: false, message: '字串內僅能有英語或數字和 [.] [_]。' } );
+            if ( !UserVerify.validateEmail(account) || !UserVerify.justInputEngorNum(password) ){
+                return res.json( { success: false, message: '請輸入正確的Email、密碼僅能有英語或數字和 [.] [_]。' } );
             }
-            if ( !UserVerify.wordCountLimit(account, 6, 20) || !UserVerify.wordCountLimit(password, 6, 20) ){
-                return res.json( { success: false, message: '帳號或密碼限制字串長度 6~20。' } );
+            if ( !UserVerify.validateEmail(account) || !UserVerify.wordCountLimit(password, 6, 20) ){
+                return res.json( { success: false, message: '請輸入正確的Email、密碼限制字串長度 6~20。' } );
             }
             // 確認帳號未重複
             try {

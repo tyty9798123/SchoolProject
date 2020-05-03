@@ -25,8 +25,8 @@
         <el-input v-model="name" placeholder="使用者名稱"></el-input>
       </el-tooltip>
       <br><br>
-      <el-tooltip class="item" effect="dark" content="輸入6~20個字元" placement="bottom">
-        <el-input v-model="account" placeholder="帳號"></el-input>
+      <el-tooltip class="item" effect="dark" content="輸入正確的Email" placement="bottom">
+        <el-input v-model="account" placeholder="Email"></el-input>
       </el-tooltip>
       <br><br>
       <el-tooltip class="item" effect="dark" content="輸入6~20個字元" placement="bottom-end">
@@ -132,7 +132,7 @@
     computed: {
       check_input_is_valid(){
         let vm = this;
-        if (vm.name.length >= 3 && vm.account.length >= 6 && vm.account.length <= 20 
+        if (vm.name.length >= 3 
         && vm.password.length >= 6 && vm.password.length <= 20 && vm.password == vm.confirmed_password
         && vm.captcha_text.length == 5){
           return true;

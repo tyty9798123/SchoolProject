@@ -1,3 +1,4 @@
-<h1><%= message %></h1>
-<h2><%= error.status %></h2>
-<pre><%= error.stack %></pre>
+<% extend('./layouts/default')%>
+<div class="alert alert-danger" role="alert">
+    權限不足，<a href='/'>回首頁</a>。
+</div>

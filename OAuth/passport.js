@@ -1,13 +1,13 @@
 var passport = require('passport')
 , FacebookStrategy = require('passport-facebook').Strategy;
-
+require('dotenv').config();
 
 passport.use(new FacebookStrategy({
-        clientID: 855816091295775,
+        clientID: process.env.FB_CLIENT_ID,
 
-        clientSecret: "3cc27d568ccd2ab083461ba962ecc3fd",
+        clientSecret: process.env.FB_CLIENT_SECRET,
 
-        callbackURL: "http://localhost:3000/auth/facebook/callback",
+        callbackURL: process.env.FB_CALLBACK_URL,
 	//callbackURL: "http://localhost:3030/auth/facebook/callback",
         profileFields: ['id', 'email', 'displayName', 'photos']
     },

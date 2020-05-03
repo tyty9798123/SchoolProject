@@ -105,8 +105,44 @@ class UserController{
         res.redirect('/');
     }
 
-    fb_success(req, res, next) {
-        console.log(req.user);
+    async fb_success(req, res, next) {
+        let data = {
+            name: req.user.displayName,
+            account: req.user._json.email,
+            password: req.user.provider,
+        }
+        muser.checkAccountNoRepeat(req.user._json.email)
+        .then(async ()=>{
+            // 帳號沒人用 
+            // 插入到資料庫
+            try {
+                let response = await muser.createAnAccount(data);
+                // 註冊、登入成功
+                req.session.uid = response.uid;
+                res.send(`
+                    <script>
+                        alert('註冊、登入成功。');
+                        location.href = '/';
+                    </script>
+                `);
+            }
+            catch(e) {
+                console.log('與資料庫連結發生錯誤。');
+            }
+        })
+        .catch(result => {
+            if (result.message === '帳號已被使用。'){
+                // 登入成功
+                console.log(result.uid)
+                req.session.uid = result.uid;
+                res.send(`
+                    <script>
+                        alert('登入成功。');
+                        location.href = '/';
+                    </script>
+                `);
+            }
+        })
     }
 }
 

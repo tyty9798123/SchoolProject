@@ -12,7 +12,8 @@ let checkAccountNoRepeat = (account) => {
             }else{
                 if (result[0]){
                     reject({
-                        message: '帳號已被使用。'
+                        message: '帳號已被使用。',
+                        uid: result[0].id
                     })
                 }else{
                     resolve();
@@ -36,7 +37,9 @@ let createAnAccount = (data) => {
                 reject();
             }
             else{
-                resolve();
+                resolve({
+                    uid: result.insertId
+                });
             }
         })
     })

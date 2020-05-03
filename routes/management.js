@@ -9,8 +9,7 @@ managementController = new managementController();
 router.use((req, res, next) => {
   if (!req.session.uid){
     return res.render('error_message', {
-      title: '錯誤，權限不足。',
-      auth: 0
+      title: '錯誤，權限不足。'
     });
   }
   mysql.query(`SELECT is_admin FROM users WHERE id = ${req.session.uid}`, (err, result) => {
@@ -26,15 +25,15 @@ router.use((req, res, next) => {
           next();
         }
         else {
+          console.log(1)
           return res.render('error_message', {
             title: '錯誤，權限不足。',
-            auth: req.session.uid
           });
         }
       }else{
+        console.log(1)
         return res.render('error_message.ejs', {
           title: '錯誤，權限不足。',
-          auth: req.session.uid
         });
       }
     }

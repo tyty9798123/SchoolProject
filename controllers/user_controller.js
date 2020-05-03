@@ -18,51 +18,52 @@ class UserController{
     // method: POST
     // path /signup
     // Params: name, account, password, captcha_text
-    create(req, res, snext){
-        /* 此功能目前關閉 */
-        return res.send({
-            success: false,
-            message: '此功能目前關閉。',
-        })
+    async create(req, res, snext){
         /*
+        // 字串內僅能有英語或數字和 [.] [_] 
+                if ( UserVerify.justInputEngorNum(account) &&  UserVerify.justInputEngorNum(password) ){
+        // 限制字串長度 6~20
+                if ( UserVerify.wordCountLimit(account, 6, 20) &&  UserVerify.wordCountLimit(password, 6, 20) ){
+        // 加密
+                const hash_password = crypto.createHash('sha256').update(password).digest('base64');
+                
+                if (err) return res.json( { success: false, message: '與資料庫連結發生錯誤。' } );
+                return res.json( { success: false, message: '帳號或密碼限制字串長度 6~20。' } )
+                return res.json( { success: false, message: '字串內僅能有英語或數字和 [.] [_]。' } )
+        */
         if (req.session.code !== req.body.captcha_text.toLowerCase()){
             return res.json( { success: false, message: '驗證碼輸入錯誤。' } )
         }
         // 確認資料都存在
         if ( req.body.name && req.body.account && req.body.password ){
             let name = req.body.name, account = req.body.account, password = req.body.password;
-            muser.findOne({account:account}).then(function( result ){
-                if(result){
-                    return res.json( { success: false, message: '帳號已存在。' } );
-                }
-                // 字串內僅能有英語或數字和 [.] [_] 
-                if ( UserVerify.justInputEngorNum(account) &&  UserVerify.justInputEngorNum(password) ){
-                    // 限制字串長度 6~20
-                    if ( UserVerify.wordCountLimit(account, 6, 20) &&  UserVerify.wordCountLimit(password, 6, 20) ){
-                        const hash_password = crypto.createHash('sha256').update(password).digest('base64');
-                        var save_test = new muser({
-                            name: name,
-                            account: account,
-                            password: hash_password
-                        });
-                        save_test.save(function(err){
-                            if (err) return res.json( { success: false, message: '與資料庫連結發生錯誤。' } );
-                            return res.json( { success: true } );
-                        })
-                    }
-                    else{
-                        return res.json( { success: false, message: '帳號或密碼限制字串長度 6~20。' } )
-                    }
-                }
-                else{
-                    return res.json( { success: false, message: '字串內僅能有英語或數字和 [.] [_]。' } )
-                }
-            })
+            const hashPassword = crypto.createHash('sha256').update(password).digest('base64');
+            if ( !UserVerify.justInputEngorNum(account) || !UserVerify.justInputEngorNum(password) ){
+                return res.json( { success: false, message: '字串內僅能有英語或數字和 [.] [_]。' } );
+            }
+            if ( !UserVerify.wordCountLimit(account, 6, 20) || !UserVerify.wordCountLimit(password, 6, 20) ){
+                return res.json( { success: false, message: '帳號或密碼限制字串長度 6~20。' } );
+            }
+            // 確認帳號未重複
+            try {
+                muser.checkAccountNoRepeat(account);
+            }
+            catch(e) {
+                return res.json( { success: false, message: '帳號已被使用。' } );
+            }
+            // 插入到資料庫
+            try {
+                req.body.password = hashPassword;
+                muser.createAnAccount(req.body);
+                return res.json( { success: true } );
+            }
+            catch(e) {
+                return res.json( { success: false, message: '與資料庫連結發生錯誤。' } );
+            }
         }
         else{
             return res.json( { success: false, message: '系統發生錯誤。' } )
         }
-        */
     }
     // method: GET
     // path /login

@@ -1,10 +1,9 @@
 let mysql = require('../connections/mysql');
 
-/*
-let checkAccountNoRepeat = (data) => {
+
+let checkAccountNoRepeat = (account) => {
     return new Promise( (resolve, reject) => {
-        let account = data.account;
-        let stmt = `SELECT * FROM users where account = ${account};`;
+        let stmt = `SELECT * FROM users where account = '${account}';`;
         mysql.query(stmt, (err, result) => {
             if(err){
                 reject({
@@ -23,9 +22,27 @@ let checkAccountNoRepeat = (data) => {
     })
 }
 
-//let addAdmin = (resolve,)
+let createAnAccount = (data) => {
+    let { name } = data;
+    let { account } = data;
+    let { password } = data;
+    let stmt = `
+        INSERT INTO users (name, account, password, is_admin, sign_in_count)
+        VALUES ('${name}', '${account}', '${password}', 0, 0)
+    `;
+    return new Promise( (resolve, reject) => {
+        mysql.query(stmt, (err, result) => {
+            if (err){
+                reject();
+            }
+            else{
+                resolve();
+            }
+        })
+    })
+}
 
 module.exports = {
     checkAccountNoRepeat,
+    createAnAccount
 }
-*/

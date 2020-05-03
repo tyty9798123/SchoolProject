@@ -104,6 +104,10 @@ class UserController{
         req.session.destroy();
         res.redirect('/');
     }
+
+    fb_success(req, res, next) {
+        console.log(req.user);
+    }
 }
 
 module.exports = UserController;

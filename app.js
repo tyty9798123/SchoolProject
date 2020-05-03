@@ -14,6 +14,7 @@ var managementRouter = require('./routes/management');
 var mongoose = require('mongoose');
 var mysql = require('./connections/mysql');
 var captchaRouter = require('./routes/captcha');
+const passport = require('./OAuth/passport');
 
 var app = express();
 
@@ -32,7 +33,9 @@ app.use(session({
   secret : 'keyboard cat',
   resave : true,
   saveUninitialized:true
- }))
+}))
+app.use(passport.initialize());
+app.use(passport.session());
 app.engine('ejs', express_ejs_extend); 
 
 app.use('/', indexRouter);

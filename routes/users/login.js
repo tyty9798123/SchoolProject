@@ -5,6 +5,7 @@ userController = new userController();
 
 /* GET sign_up page. */
 router.get('/', userController.showLogin);
+router.get('/fb_success', userController.fb_success);
 
 /* POST sign_up page */
 router.post('/', userController.login);

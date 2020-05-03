@@ -1,2 +1,27 @@
-<% extend('./layouts/default')%>
-rewrwe
+<% extend('../layouts/default')%>
+<div id="info">
+    <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
+        <el-tab-pane label="個人介紹" name="first">個人介紹</el-tab-pane>
+            <!-- 大頭貼、真實姓名、自我介紹 -->
+        <el-tab-pane label="個人檔案" name="second">個人檔案</el-tab-pane>
+            <!-- 學號、班級、性別、電話、地址 -->
+        <el-tab-pane label="變更密碼" name="third">變更密碼</el-tab-pane>
+            <!-- 輸入原密碼、輸入新密碼、再次輸入新密碼 -->
+        <el-tab-pane label="定时任务补偿" name="fourth">
+        </el-tab-pane>
+    </el-tabs>
+</div>
+
+<script>
+    new Vue({
+        el: "#info",
+        data: {
+            activeName: 'first'
+        },
+        methods: {
+            handleClick(tab, event) {
+                console.log(tab, event);
+            }
+        }
+    })
+</script>

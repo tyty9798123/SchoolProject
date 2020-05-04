@@ -1,17 +1,49 @@
 <% extend('../layouts/default')%>
+<!-- PureCSS -->
+<link rel="stylesheet" href="https://unpkg.com/purecss@1.0.1/build/pure-min.css" integrity="sha384-oAOxQR6DkCoMliIh8yFnu25d7Eq/PHS21PClpwjOTeU2jRSq11vu66rf90/cZr47" crossorigin="anonymous">
+<link rel="stylesheet" href="/stylesheets/pure_button.css">
+<!-- Cropper -->
+<link  href="/cropperjs/dist/cropper.css" rel="stylesheet">
+<script src="/cropperjs/dist/cropper.js"></script>
 <div id="info">
-    <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
-        <el-tab-pane label="個人介紹" name="first">個人介紹</el-tab-pane>
-            <!-- 大頭貼、真實姓名、自我介紹 -->
-        <el-tab-pane label="個人檔案" name="second">個人檔案</el-tab-pane>
-            <!-- 學號、班級、性別、電話、地址 -->
-        <el-tab-pane label="變更密碼" name="third">變更密碼</el-tab-pane>
-            <!-- 輸入原密碼、輸入新密碼、再次輸入新密碼 -->
-    </el-tabs>
+    <div class="container mt-3">
+        <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
+            <el-tab-pane label="個人介紹" name="first">
+                <div class="text-center">
+                    <!-- 頭像區 -->
+                    <el-card shadow="always">
+                        設定個人頭像
+                    </el-card>
+                    <div class="demo-basic--circle mt-3">
+                        <div class="block">
+                            <el-avatar :size="150" id="avatar_image" src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png"></el-avatar>
+                        </div>
+                    </div>
+                    <!-- 大頭貼、真實姓名、自我介紹 -->
+                    <button class="button-secondary pure-button" type="button">上傳圖片</button>
+                    <button onclick="delete_img()" type="button" class="button-error pure-button" id="delete-img">移除圖片</button>
+                    <input type="file" style="display: none" name="logo" onchange="readAsDataURL()" multiple="multiple" class="form-control-file" id="file" accept="image/gif, image/jpeg, image/png" >
+                    <div id="result"></div>
+                    <!-- 頭像區 -->
+                </div>
+            </el-tab-pane>
+            <el-tab-pane label="個人檔案" name="second">
+                <!-- 學號、班級、性別、電話、地址 -->
+                <div class="text-center">
+                    <el-card shadow="always">
+                        學生證認證
+                    </el-card>
+                </div>
+            </el-tab-pane>
+                
+            <el-tab-pane label="變更密碼" name="third">變更密碼</el-tab-pane>
+                <!-- 輸入原密碼、輸入新密碼、再次輸入新密碼 -->
+        </el-tabs>
+    </div>
 </div>
 
 <script>
-    new Vue({
+    let vm = new Vue({
         el: "#info",
         data: {
             activeName: 'first'
@@ -22,4 +54,41 @@
             }
         }
     })
+    $(document).ready(function(){
+        $('.button-secondary').click(function(){
+            $('.form-control-file')[0].click();
+        })
+    })
+    let isUpload;
+    var delete_img = function(){
+        console.log(123);
+        var file = document.getElementById('file');
+        file.outerHTML = file.outerHTML;
+        $('#result').hide(500);
+        isUpload = 0;
+        $('#avatar_image>img').attr('src', 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png');
+    }
+    //about file
+    var result=document.getElementById("result");  
+    var file=document.getElementById("file");
+    
+    function readAsDataURL(){  
+        var file = document.getElementById("file").files;
+        var result = document.getElementById("result");  
+        for(i = 0; i< file.length; i ++) {
+            var reader    = new FileReader();    
+            reader.readAsDataURL(file[i]);  
+            reader.onload=function(e){
+                isUpload = 1;
+                let imageResult = this.result;
+                $('#avatar_image>img').attr('src', imageResult);
+                /*
+                result.innerHTML = '<a href="'+this.result+'" data-lightbox="example-1">'
+                +'<img  class="x img-fluid img-thumbnail" width="200" src="'+this.result+'" alt="image-1" /></a>'
+                +'<br><button onclick="delete_img()" type="button" class="button-error pure-button" id="delete-img">刪除圖片</button>';  
+                $('#result').slideToggle();
+                */
+            }
+        }
+    }
 </script>

@@ -2,6 +2,11 @@
 <!-- PureCSS -->
 <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.1/build/pure-min.css" integrity="sha384-oAOxQR6DkCoMliIh8yFnu25d7Eq/PHS21PClpwjOTeU2jRSq11vu66rf90/cZr47" crossorigin="anonymous">
 <link rel="stylesheet" href="/stylesheets/pure_button.css">
+<style>
+    .el-avatar > img {
+        width: 100%;
+    }
+</style>
 <!-- Cropper -->
 <link  href="/cropperjs/dist/cropper.css" rel="stylesheet">
 <script src="/cropperjs/dist/cropper.js"></script>
@@ -25,6 +30,7 @@
                     <input type="file" style="display: none" name="logo" onchange="readAsDataURL()" multiple="multiple" class="form-control-file" id="file" accept="image/gif, image/jpeg, image/png" >
                     <div id="result"></div>
                     <!-- 頭像區 -->
+                    
                 </div>
             </el-tab-pane>
             <el-tab-pane label="個人檔案" name="second">

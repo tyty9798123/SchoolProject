@@ -12,7 +12,9 @@ router.get('/information', function(req, res, next) {
   });
 })
 
-router.get('/add_isolation', function(req, res, next) {
-  
+router.get('/set_my_isolation_info', function(req, res, next) {
+  res.render('users/set_my_isolation_info', {
+    title: '設定我的隔離資訊'
+  })
 })
 module.exports = router;

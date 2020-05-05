@@ -1,0 +1,32 @@
+<% extend('../layouts/default') %>
+<!-- Import Material Design Lite -->
+
+<div class="mt-3 mb-3">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4 col-md-12">
+                <div class="list-group" role="tablist" id="list-tab">
+                    <div class="list-group-item">
+                        <i class="el-icon-arrow-right"></i>&nbsp;選擇型態
+                        <hr>
+                        <div class="list-group" id="list-tab" role="tablist">
+                            <a class="list-group-item list-group-item-action active" id="list-home-list" data-toggle="list" href="#list-home" role="tab" aria-controls="home">居家檢疫</a>
+                            <a class="list-group-item list-group-item-action" id="list-profile-list" data-toggle="list" href="#list-profile" role="tab" aria-controls="profile">居家隔離</a>
+                            <a class="list-group-item list-group-item-action" id="list-messages-list" data-toggle="list" href="#list-messages" role="tab" aria-controls="messages">自主健康管理</a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-lg-8 col-md-12">
+                <div class="tab-content" id="nav-tabContent">
+                <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
+                    <%- include ./isolation_layouts/add_home_quarantine.ejs %>
+                </div>
+                <div class="tab-pane fade" id="list-profile" role="tabpanel" aria-labelledby="list-profile-list">2</div>
+                <div class="tab-pane fade" id="list-messages" role="tabpanel" aria-labelledby="list-messages-list">3</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

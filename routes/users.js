@@ -11,4 +11,8 @@ router.get('/information', function(req, res, next) {
     title: '變更會員資料',
   });
 })
+
+router.get('/add_isolation', function(req, res, next) {
+  
+})
 module.exports = router;

@@ -2,24 +2,6 @@
 <!-- PureCSS -->
 <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.1/build/pure-min.css" integrity="sha384-oAOxQR6DkCoMliIh8yFnu25d7Eq/PHS21PClpwjOTeU2jRSq11vu66rf90/cZr47" crossorigin="anonymous">
 <link rel="stylesheet" href="/stylesheets/pure_button.css">
-<style>
-    .el-avatar > img {
-        width: 100%;
-    }
-    #self-info{
-        margin-top: 8px;
-        margin-bottom: 8px;
-    }
-    #self-info div {
-        margin-top: 13px;
-    }
-    #info_background{
-        width: 100%;
-        height: 300px;
-        background-size: cover;
-        background-image: url("https://images.pexels.com/photos/317355/pexels-photo-317355.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260");
-    }
-</style>
 <!-- Cropper -->
 <link  href="/cropperjs/dist/cropper.css" rel="stylesheet">
 <script src="/cropperjs/dist/cropper.js"></script>
@@ -32,64 +14,7 @@
                 </div>
             </el-tab-pane>
             <el-tab-pane label="個人檔案" name="second">
-                <div id="info_background">
-
-                </div>
-                <div class="row" id="self-info">
-                    <div class="col-12 col-sm-12 col-md-6 col-lg-6">
-                        <div class="row" style="margin-top: -30px; border-bottom: 1px solid grey;">
-                            <div class="col-2" style="padding-top: 13px;">
-                                性別
-                            </div>
-                            <div class="col-10">
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="gender" id="male" value="male">
-                                    <label class="form-check-label" for="male">男性</label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="gender" id="female" value="female">
-                                    <label class="form-check-label" for="female">女性</label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 col-sm-12 col-md-6 col-lg-6">
-                        <input class="form-control" type="text" placeholder="體重">
-                    </div>
-                    <div class="col-12 col-sm-12 col-md-6 col-lg-6">
-                        <input class="form-control" type="text" placeholder="身高">
-                    </div>
-                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 ">
-                        <input class="form-control" type="text" placeholder="手機號碼">
-                    </div>
-                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 ">
-                        <div class="row">
-                            <div class="col-2">
-                                生日
-                            </div>
-                            <div class="col-10">
-                                <input class="form-control" type="date" id="example-date-input">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 ">
-                        <div class="form-group">
-                            <label for="exercise">活動強度</label>
-                            <select class="form-control" id="exercise">
-                              <option>久坐少動型（很少運動或完全沒運動者）</option>
-                              <option>輕度活動型（每週運動1-3次者）</option>
-                              <option>中度運動型（每週運動4-5次者）</option>
-                              <option>重度運動型（每週運動6-7次者）</option>
-                              <option>體力勞動型（每天非常重度的運動或體力勞動工作者）</option>
-                            </select>
-                          </div>
-                    </div>
-                    <div class="col-12">
-                        <input class="form-control" type="text" id="mailing_address" placeholder="通訊地址">
-                    </div>
-                </div>
-                <hr>
-                <button type="button" class="btn btn-info float-right">儲存</button>
+                <%- include ./info_layouts/details.ejs %>
             </el-tab-pane>
                 
             <el-tab-pane label="變更密碼" name="third">
@@ -120,7 +45,6 @@
         })
     })
     var delete_img = function(){
-        console.log(123);
         var file = document.getElementById('file');
         file.outerHTML = file.outerHTML;
         $('#result').hide(500);

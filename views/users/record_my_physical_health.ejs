@@ -1,0 +1,151 @@
+<% extend('../layouts/default') %>
+<style>
+    .card-img-top{
+        height: 150px;
+    }
+    @media only screen and (min-width: 768px){
+        .card-img-top{
+            height: 200px;
+        }
+    }
+    @media only screen and (min-width: 992px){
+        .card-img-top{
+            height: 200px;
+        }
+    }
+    @media only screen and (min-width: 1200px){
+        .card-img-top{
+            height: 250px;
+        }
+    }
+</style>
+<div id="record_my_physical_health">
+    <!--
+        症狀
+        體溫
+        身高
+        體重
+        體脂
+        腰圍
+        心跳
+        血壓
+        血糖
+        血氧
+        總膽固醇
+        尿酸
+        睡眠
+    -->
+    <div class="container mt-3 mb-3">
+        <el-tabs type="border-card">
+            <el-tab-pane label="生理量測">
+                <div class="row">
+                    <template v-for="(item, index) in measurement_types" :key="index">
+                    <div class="col-6 col-lg-4">
+                        <a href="das">
+                        <div class="card mt-3" style="width: 100%;">
+                            <img :src="item.type_image_url" class="card-img-top" :alt="item.type_eng_name">
+                            <div class="card-body">
+                            <p class="card-text text-center">
+                                <el-link :type="a_tag_color_types[getRandomInt(6)]" v-text="item.type_name"></el-link>
+                            </p>
+                            </div>
+                        </div>
+                        </a>
+                    </div>
+                    </template>
+                </div>
+            </el-tab-pane>
+            <el-tab-pane label="健康評估">
+
+            </el-tab-pane>
+        </el-tabs>
+    </div>
+</div>
+
+<script>
+    let record_my_physical_health = new Vue({
+        el: "#record_my_physical_health",
+        data: {
+            measurement_types: [
+                {
+                    type_name: '症狀',
+                    type_image_url: '/images/symptom.png',
+                    type_eng_name: 'symptom',
+                },
+                {
+                    type_name: '體溫',
+                    type_image_url: '/images/temperature.png',
+                    type_eng_name: 'temperature',
+                },
+                {
+                    type_name: '身高',
+                    type_image_url: '/images/height.png',
+                    type_eng_name: 'height',
+                },
+                {
+                    type_name: '體重',
+                    type_image_url: '/images/weight.png',
+                    type_eng_name: 'weight',
+                },
+                {
+                    type_name: '體脂',
+                    type_image_url: '/images/body_fat.png',
+                    type_eng_name: 'body_fat',
+                },
+                {
+                    type_name: '腰圍',
+                    type_image_url: '/images/waistline.png',
+                    type_eng_name: 'waistline',
+                },
+                {
+                    type_name: '心跳',
+                    type_image_url: '/images/heartbeat.png',
+                    type_eng_name: 'heartbeat',
+                },
+                {
+                    type_name: '血壓',
+                    type_image_url: '/images/blood_pressure.png',
+                    type_eng_name: 'blood_pressure',
+                },
+                {
+                    type_name: '血糖',
+                    type_image_url: '/images/blood_sugar.jpg',
+                    type_eng_name: 'blood_sugar',
+                },
+                {
+                    type_name: '血氧',
+                    type_image_url: '/images/blood_oxygen.jpg',
+                    type_eng_name: 'blood_oxygen',
+                },
+                {
+                    type_name: '總膽固醇',
+                    type_image_url: '/images/cholesterol.png',
+                    type_eng_name: 'cholesterol',
+                },
+                {
+                    type_name: '尿酸',
+                    type_image_url: '/images/uric_acid.jpg',
+                    type_eng_name: 'uric_acid',
+                },
+                {
+                    type_name: '睡眠',
+                    type_image_url: '/images/sleep.jpg',
+                    type_eng_name: 'sleep', 
+                }
+            ],
+            a_tag_color_types: [
+                '',
+                'primary',
+                'success',
+                'warning',
+                'danger',
+                'info',
+            ]
+        },
+        methods: {
+            getRandomInt(max) {
+                return Math.floor(Math.random() * Math.floor(max));
+            }
+        }
+    })
+</script>

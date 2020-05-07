@@ -17,4 +17,10 @@ router.get('/set_my_isolation_info', function(req, res, next) {
     title: '設定我的隔離資訊'
   })
 })
+
+router.get('/record_my_physical_health', function(req, res, next){
+  res.render('users/record_my_physical_health', {
+    title: '紀錄我的身體健康狀況'
+  })
+})
 module.exports = router;

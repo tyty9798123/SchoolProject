@@ -11,7 +11,6 @@ var logoutRouter = require('./routes/users/logout');
 var express_ejs_extend = require('express-ejs-extend');
 var loginRouter = require('./routes/users/login');
 var managementRouter = require('./routes/management');
-var mysql = require('./connections/mysql');
 var captchaRouter = require('./routes/captcha');
 const passport = require('./OAuth/passport');
 

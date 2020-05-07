@@ -4,16 +4,26 @@
           font-size: 16px;
           width: 100%;
         }
+        #LastUpdatedDateField{
+            color: grey;
+            font-size: 12px;
+        }
     }
     @media only screen and (min-width: 768px){
         .card-h1{
           font-size: 20px;
+        }
+        #LastUpdatedDateField{
+            font-size: 14px;
         }
     }
     @media only screen and (min-width: 992px){
         .card-h1{
           font-size: 24px;
 
+        }
+        #LastUpdatedDateField{
+            font-size: 16px;
         }
     }
     @media only screen and (min-width: 1200px){
@@ -34,28 +44,36 @@
             <blockquote class="blockquote mb-0">
             <h1 class="card-h1">
                 <div class="row">
-                <div class="col-4">
-                    確診
-                    <br>
-                    <span
-                    id="TotalConfirmed"
-                    class="badge badge-pill badge-primary"
-                    >Loading...</span>
+                    <div class="col-4">
+                        確診
+                        <br>
+                        <span
+                        id="TotalConfirmed"
+                        class="badge badge-pill badge-primary"
+                        >Loading...</span>
+                    </div>
+                    <div class="col-4">
+                        死亡
+                        <br><span
+                        id="TotalDeaths"
+                        class="badge badge-pill badge-danger"
+                        >Loading...</span>
+                    </div>
+                    <div class="col-4">
+                        解除隔離
+                        <br><span
+                        id="TotalRecovered"
+                        class="badge badge-pill badge-success"
+                        >Loading...</span>
+                    </div>
                 </div>
-                <div class="col-4">
-                    死亡
-                    <br><span
-                    id="TotalDeaths"
-                    class="badge badge-pill badge-danger"
-                    >Loading...</span>
-                </div>
-                <div class="col-4">
-                    解除隔離
-                    <br><span
-                    id="TotalRecovered"
-                    class="badge badge-pill badge-success"
-                    >Loading...</span>
-                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <br>
+                        <span class="float-right" id="LastUpdatedDateField">
+                            最後更新時間&nbsp;:&nbsp;<span id="LastUpdatedDate"></span>
+                        </span>
+                    </div>
                 </div>
             </h1>
             </blockquote>
@@ -63,6 +81,7 @@
         </div>
     </div>
 </div>
+<script src="/lib/timestamp.js"></script>
 <script>
   //創建一個請求變量，並為其分配一個新的XMLHttpRequest對象。
   var request = new XMLHttpRequest();
@@ -79,7 +98,9 @@
         document.getElementById("TotalDeaths").innerHTML =
           obj.Countries[i].TotalDeaths;
         document.getElementById("TotalRecovered").innerHTML =
-          obj.Countries[i].TotalRecovered; 
+          obj.Countries[i].TotalRecovered;
+        document.getElementById("LastUpdatedDate").innerHTML =
+            datetimeConvert(obj.Countries[i].Date);
         break;
       }
     }

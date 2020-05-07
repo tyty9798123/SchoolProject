@@ -11,7 +11,6 @@ var logoutRouter = require('./routes/users/logout');
 var express_ejs_extend = require('express-ejs-extend');
 var loginRouter = require('./routes/users/login');
 var managementRouter = require('./routes/management');
-var mongoose = require('mongoose');
 var mysql = require('./connections/mysql');
 var captchaRouter = require('./routes/captcha');
 const passport = require('./OAuth/passport');
@@ -45,17 +44,6 @@ app.use('/login', loginRouter);
 app.use('/logout', logoutRouter);
 app.use('/management', managementRouter);
 app.use('/captcha', captchaRouter);
-//DB
-var db = require("./connections/mongoose").mongoURI;
-
-//Connect
-mongoose.connect(db, { useNewUrlParser: true, useUnifiedTopology : true})
-.then(function(){
-    console.log("MongoDB Connected")
-})
-.catch(function(err){
-    console.log(err);
-})
 
 app.get('/', (req,res) => {
     res.send("Hello World");

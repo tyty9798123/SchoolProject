@@ -36,3 +36,8 @@ function datetimeConvert(UNIX_timestamp){
   }
   return year + '-' + month + '-' + date + ' ' + hour + ':' + min + ':' + sec;
 }
+
+module.exports = {
+  datetimeConvert,
+  timeConverter
+}

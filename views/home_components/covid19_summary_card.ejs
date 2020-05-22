@@ -8,6 +8,12 @@
             color: grey;
             font-size: 12px;
         }
+        #link-record_my_physical_healh{
+          margin-top: 20px;
+        }
+        #link-record_my_physical_healh img {
+          height: 200px;
+        }
     }
     @media only screen and (min-width: 768px){
         .card-h1{
@@ -15,6 +21,12 @@
         }
         #LastUpdatedDateField{
             font-size: 14px;
+        }
+        #link-record_my_physical_healh{
+          margin-top: 0;
+        }
+        #link-record_my_physical_healh img {
+          height: 100%;
         }
     }
     @media only screen and (min-width: 992px){
@@ -32,60 +44,63 @@
         }
     }
 </style>
+<div class="container">
 <div class="row">
-    <div class="col-9">
+    <div class="col-12 col-md-9">
         <div class="card" style="width: 95%; margin:0 auto;">
-        <div
-            class="card-header text-white"
-            style="text-align: center; background-color: rgb(127, 173, 173);">
-            <h1 class="card-h1">Taiwan - 即時 COVID-19 案例個數</h1>
-        </div>
-        <div class="card-body" style="text-align: center;">
-            <blockquote class="blockquote mb-0">
-            <h1 class="card-h1">
-                <div class="row">
-                    <div class="col-4">
-                        確診
-                        <br>
-                        <span
-                        id="TotalConfirmed"
-                        class="badge badge-pill badge-primary mt-2"
-                        >Loading...</span>
-                    </div>
-                    <div class="col-4">
-                        死亡
-                        <br><span
-                        id="TotalDeaths"
-                        class="badge badge-pill badge-danger mt-2"
-                        >Loading...</span>
-                    </div>
-                    <div class="col-4">
-                        解除隔離
-                        <br><span
-                        id="TotalRecovered"
-                        class="badge badge-pill badge-success mt-2"
-                        >Loading...</span>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-12">
-                        <br>
-                        <span class="float-right" id="LastUpdatedDateField">
-                            最後更新時間&nbsp;:&nbsp;<span id="LastUpdatedDate"></span>
-                        </span>
-                    </div>
-                </div>
-            </h1>
-            </blockquote>
-        </div>
+          <div
+              class="card-header text-white"
+              style="text-align: center; background-color: rgb(127, 173, 173);">
+              <h1 class="card-h1">Taiwan - 即時 COVID-19 案例個數</h1>
+          </div>
+          <div class="card-body" style="text-align: center;">
+              <blockquote class="blockquote mb-0">
+              <h1 class="card-h1">
+                  <div class="row">
+                      <div class="col-4">
+                          確診
+                          <br>
+                          <span
+                          id="TotalConfirmed"
+                          class="badge badge-pill badge-primary mt-2"
+                          >Loading...</span>
+                      </div>
+                      <div class="col-4">
+                          死亡
+                          <br><span
+                          id="TotalDeaths"
+                          class="badge badge-pill badge-danger mt-2"
+                          >Loading...</span>
+                      </div>
+                      <div class="col-4">
+                          解除隔離
+                          <br><span
+                          id="TotalRecovered"
+                          class="badge badge-pill badge-success mt-2"
+                          >Loading...</span>
+                      </div>
+                  </div>
+                  <div class="row">
+                      <div class="col-12">
+                          <br>
+                          <span class="float-right" id="LastUpdatedDateField">
+                              最後更新時間&nbsp;:&nbsp;<span id="LastUpdatedDate"></span>
+                          </span>
+                      </div>
+                  </div>
+              </h1>
+              </blockquote>
+          </div>
         </div>
     </div>
-    <div class="col-3"  style="height: 80%;">
-      <a  href="/users/record_my_physical_health">
+    <div class="col-12 col-md-3" id="link-record_my_physical_healh">
       <div class="card">
-        <img class="card-img-top" src="images/myhealth.png" alt="Card image cap">
+        <a href="/users/record_my_physical_healh">
+          <img class="card-img-top" src="images/myhealth.png" alt="Card image cap">
+        </a>
+      </div>
     </div>
-  </a>
+</div>
 </div>
 <script src="/lib/timestamp.js"></script>
 <script>

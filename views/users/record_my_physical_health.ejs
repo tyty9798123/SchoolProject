@@ -39,19 +39,19 @@
         <el-tabs type="border-card">
             <el-tab-pane label="生理量測">
                 <div class="row">
-                    <template v-for="(item, index) in measurement_types" :key="index">
-                    <div class="col-6 col-lg-4">
-                        <a href="das">
-                        <div class="card mt-3" style="width: 100%;">
-                            <img :src="item.type_image_url" class="card-img-top" :alt="item.type_eng_name">
-                            <div class="card-body">
-                            <p class="card-text text-center">
-                                <el-link :type="a_tag_color_types[getRandomInt(6)]" v-text="item.type_name"></el-link>
-                            </p>
+                    <template v-for="(item, index) in measurement_types">
+                        <div class="col-6 col-lg-4">
+                            <a href="das">
+                            <div class="card mt-3" style="width: 100%;">
+                                <img :src="item.type_image_url" class="card-img-top" :alt="item.type_eng_name">
+                                <div class="card-body">
+                                <p class="card-text text-center">
+                                    <el-link :type="a_tag_color_types[getRandomInt(6)]" v-text="item.type_name"></el-link>
+                                </p>
+                                </div>
                             </div>
+                            </a>
                         </div>
-                        </a>
-                    </div>
                     </template>
                 </div>
             </el-tab-pane>

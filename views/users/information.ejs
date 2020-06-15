@@ -63,6 +63,21 @@
         $('.button-secondary').click(function(){
             $('.form-control-file')[0].click();
         })
+        $('#avatar_save').click(()=>{
+            /* post values */
+            let avatar = document.getElementById("file").files[0] || '';
+            let read_name = document.getElementById('real-name').value || '';
+            let self_introduction = document.getElementById('self-introduction').value || '';
+            /* Prepare for AJAX */
+            let xhr = new XMLHttpRequest();
+            xhr.open('post', '/users/update_avatar', true);
+            xhr.setRequestHeader('Content-type', 'multipart/form-data');
+            let formData = new FormData();
+            formData.append('avatar', avatar);
+            formData.append('read_name', read_name);
+            formData.append('self_introduction', self_introduction);
+            xhr.send(formData);
+        })
     })
     var delete_img = function(){
         var file = document.getElementById('file');

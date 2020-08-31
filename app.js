@@ -12,6 +12,7 @@ var express_ejs_extend = require('express-ejs-extend');
 var loginRouter = require('./routes/users/login');
 var managementRouter = require('./routes/management');
 var captchaRouter = require('./routes/captcha');
+var healthRouter = require('./routes/health');
 const passport = require('./OAuth/passport');
 
 var app = express();
@@ -43,6 +44,7 @@ app.use('/login', loginRouter);
 app.use('/logout', logoutRouter);
 app.use('/management', managementRouter);
 app.use('/captcha', captchaRouter);
+app.use('/health', healthRouter)
 
 app.get('/', (req,res) => {
     res.send("Hello World");

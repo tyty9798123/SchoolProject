@@ -41,7 +41,7 @@
                 <div class="row">
                     <template v-for="(item, index) in measurement_types">
                         <div class="col-6 col-lg-4">
-                            <a href="das">
+                            <a :href="`/health/${item.id}`">
                             <div class="card mt-3" style="width: 100%;">
                                 <img :src="item.image_url" class="card-img-top" :alt="item.eng_name">
                                 <div class="card-body">

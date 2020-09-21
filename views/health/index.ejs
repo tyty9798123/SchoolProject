@@ -1,0 +1,56 @@
+<% extend('../layouts/default') %>
+<br>
+<style>
+    .font-style{
+        font-family: 微軟正黑體;
+    }
+</style>
+<div class="container">
+    <div class="alert alert-secondary text-center font-style"  role="alert">
+        <h3><b><%= result.name %></b></h3>
+    </div>
+    <div id="app">
+        <el-tabs type="border-card">
+            <el-tab-pane label="<%= result.name %>">
+                <form>
+                    <% if (result.name == '體溫') {%>
+                        <div class="form-group">
+                            <label >請輸入您的<%= result.name %></label>
+                            <input type="number" class="form-control"  placeholder="36.5°C">
+                        </div>
+                    <%}%>
+                    <% if (result.name == '身高') {%>
+                        <div class="form-group">
+                            <label >請輸入您的<%= result.name %></label>
+                            <input type="number" class="form-control"  placeholder="165cm">
+                        </div>
+                    <%}%>
+                    <% if (result.name == '體重') {%>
+                        <div class="form-group">
+                            <label >請輸入您的<%= result.name %></label>
+                            <input type="number" class="form-control"  placeholder="60kg">
+                        </div>
+                    <%}%>
+                
+
+
+
+                   
+                    <button type="submit" class="btn btn-primary">儲存</button>
+                  </form>
+                  
+            </el-tab-pane>
+            <el-tab-pane label="歷史紀錄">歷史紀錄</el-tab-pane>
+            
+
+          </el-tabs>
+    </div>
+</div>
+<script>
+    new Vue({
+        el:'#app'
+    })
+</script>
+
+
+

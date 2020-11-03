@@ -60,7 +60,7 @@ npm install cropperjs
 In browser:
 
 ```html
-<link  href="ntunhs/path/to/cropper.css" rel="stylesheet">
+<link  href="/ntunhs/path/to/cropper.css" rel="stylesheet">
 <script src="/path/to/cropper.js"></script>
 ```
 

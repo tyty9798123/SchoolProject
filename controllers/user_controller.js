@@ -71,7 +71,7 @@ class UserController{
     showLogin(req, res, next){
         let auth = req.session.uid;
         if (req.session.uid){   
-            return res.send(`您目前已處於登入狀態。<a href='ntunhs/'>返回首頁</a>`);
+            return res.send(`您目前已處於登入狀態。<a href='/ntunhs/'>返回首頁</a>`);
         }
         res.render('login', {
             title: '登入',

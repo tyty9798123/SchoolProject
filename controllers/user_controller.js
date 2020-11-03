@@ -122,7 +122,7 @@ class UserController{
                 res.send(`
                     <script>
                         alert('註冊、登入成功。');
-                        location.href = '/';
+                        location.href = '/ntunhs/';
                     </script>
                 `);
             }
@@ -138,7 +138,7 @@ class UserController{
                 res.send(`
                     <script>
                         alert('登入成功。');
-                        location.href = '/';
+                        location.href = '/ntunhs/';
                     </script>
                 `);
             }

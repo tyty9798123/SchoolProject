@@ -214,7 +214,7 @@
         methods: {
             getTableData() {
                 let vm = this;
-                axios.get('/management/get_all_isolator_info')
+                axios.get('/ntunhs/management/get_all_isolator_info')
                 .then( (res) => {
                     vm.dataLoaded = true;
                     let data = res.data;

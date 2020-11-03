@@ -21,7 +21,7 @@
                     account: vm.account,
                     password: vm.password,
                 }
-                axios.post('/login', data)
+                axios.post('/ntunhs/login', data)
                 .then(function(res){
                     if(res.data.success){
                         vm.$message({

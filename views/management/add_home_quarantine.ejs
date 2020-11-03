@@ -142,7 +142,7 @@
         methods: {
             generateCountryData(){
                 let vm = this;
-                axios.get('/country-list.json')
+                axios.get('/ntunhs/country-list.json')
                 .then((res) => {
                     res.data.forEach( (item, index, array) => {
                         vm.all_countries.push({
@@ -179,7 +179,7 @@
                             lng
                         }
                         console.log(data)
-                        axios.post('/management', data)
+                        axios.post('/ntunhs/management', data)
                         .then( (res) => {
                             if (res.data.success){
                                 vm.$notify({

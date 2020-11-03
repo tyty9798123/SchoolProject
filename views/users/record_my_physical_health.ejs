@@ -78,7 +78,7 @@
         },
         created() {
             let vm = this;
-            axios.get('/health/get_all_type').then(res => {
+            axios.get('/ntunhs/health/get_all_type').then(res => {
                 vm.measurement_types = res.data
             })
         },

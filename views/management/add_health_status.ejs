@@ -154,7 +154,7 @@
             },
             getAllSymptomType(){
                 let vm = this;
-                axios.get('/management/get_all_symptom_types')
+                axios.get('/ntunhs/management/get_all_symptom_types')
                 .then((res) => {
                     vm.types = res.data;
                     vm.isLoading = false;
@@ -187,7 +187,7 @@
                     symptomTypes,
                     note: vm.form.note,
                 }
-                axios.post('/management/add_health_status', data)
+                axios.post('/ntunhs/management/add_health_status', data)
                 .then(res => {
                     if (res.data.success){
                         vm.$notify({

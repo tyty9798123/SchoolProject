@@ -1,0 +1,137 @@
+<style>
+    @media only screen and (min-width: 0px){
+        .card-h1{
+          font-size: 16px;
+          width: 100%;
+        }
+        #LastUpdatedDateField{
+            color: grey;
+            font-size: 12px;
+        }
+        #link-record_my_physical_healh{
+          margin-top: 20px;
+        }
+        #link-record_my_physical_healh img {
+          height: 200px;
+        }
+    }
+    @media only screen and (min-width: 768px){
+        .card-h1{
+          font-size: 20px;
+        }
+        #LastUpdatedDateField{
+            font-size: 14px;
+        }
+        #link-record_my_physical_health{
+          margin-top: 0;
+        }
+        #link-record_my_physical_health img {
+          height: 100%;
+        }
+    }
+    @media only screen and (min-width: 992px){
+        .card-h1{
+          font-size: 24px;
+
+        }
+        #LastUpdatedDateField{
+            font-size: 16px;
+        }
+    }
+    @media only screen and (min-width: 1200px){
+        .card-h1{
+          font-size: 28px;
+        }
+    }
+</style>
+<div class="container">
+<div class="row">
+    <div class="col-12 col-md-9">
+        <div class="card" style="width: 95%; margin:0 auto;">
+          <div
+              class="card-header text-white"
+              style="text-align: center; background-color: rgb(127, 173, 173);">
+              <h1 class="card-h1">Taiwan - 即時 COVID-19 案例個數</h1>
+          </div>
+          <div class="card-body" style="text-align: center;">
+              <blockquote class="blockquote mb-0">
+              <h1 class="card-h1">
+                  <div class="row">
+                      <div class="col-4">
+                          確診
+                          <br>
+                          <span
+                          id="TotalConfirmed"
+                          class="badge badge-pill badge-primary mt-2"
+                          >Loading...</span>
+                      </div>
+                      <div class="col-4">
+                          死亡
+                          <br><span
+                          id="TotalDeaths"
+                          class="badge badge-pill badge-danger mt-2"
+                          >Loading...</span>
+                      </div>
+                      <div class="col-4">
+                          解除隔離
+                          <br><span
+                          id="TotalRecovered"
+                          class="badge badge-pill badge-success mt-2"
+                          >Loading...</span>
+                      </div>
+                  </div>
+                  <div class="row">
+                      <div class="col-12">
+                          <br>
+                          <span class="float-right" id="LastUpdatedDateField">
+                              最後更新時間&nbsp;:&nbsp;<span id="LastUpdatedDate"></span>
+                          </span>
+                      </div>
+                  </div>
+              </h1>
+              </blockquote>
+          </div>
+        </div>
+    </div>
+    <div class="col-12 col-md-3" id="link-record_my_physical_health">
+      <div class="card">
+        <a href="/users/record_my_physical_health">
+          <img class="card-img-top" src="images/myhealth.png" alt="Card image cap">
+        </a>
+      </div>
+    </div>
+</div>
+    <div class="row">
+      <div class="col-12">
+        <script src="https://apps.elfsight.com/p/platform.js" defer></script>
+        <div class="elfsight-app-d8c3af64-c5f4-4b44-a14d-a83ea63aae83"></div>
+        <div class="elfsight-app-6bf6e77b-4605-4767-8548-73056ebb7fc0"></div>
+        <br>
+      </div>
+    </div>
+</div>
+<script src="/lib/timestamp.js"></script>
+<script>
+  //創建一個請求變量，並為其分配一個新的XMLHttpRequest對象。
+  var request = new XMLHttpRequest();
+  //使用URL端點 上的GET請求打開新連接
+  request.open("get", "https://api.covid19api.com/summary", true);
+  request.send(null); //發送請求
+  request.onload = function (data) {
+    //在這裡開始訪問JSON數據
+    var obj = JSON.parse(request.responseText);
+    for (let i = 0; i < obj.Countries.length; i++) {
+      if (obj.Countries[i].Country === "Taiwan, Republic of China") {
+        document.getElementById("TotalConfirmed").innerHTML =
+          obj.Countries[i].TotalConfirmed;
+        document.getElementById("TotalDeaths").innerHTML =
+          obj.Countries[i].TotalDeaths;
+        document.getElementById("TotalRecovered").innerHTML =
+          obj.Countries[i].TotalRecovered;
+        document.getElementById("LastUpdatedDate").innerHTML =
+            datetimeConvert(obj.Countries[i].Date);
+        break;
+      }
+    }
+  };
+</script>

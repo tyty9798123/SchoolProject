@@ -1,0 +1,91 @@
+<% extend('../layouts/default') %>
+<style>
+    .card-img-top{
+        height: 150px;
+    }
+    @media only screen and (min-width: 768px){
+        .card-img-top{
+            height: 200px;
+        }
+    }
+    @media only screen and (min-width: 992px){
+        .card-img-top{
+            height: 200px;
+        }
+    }
+    @media only screen and (min-width: 1200px){
+        .card-img-top{
+            height: 250px;
+        }
+    }
+</style>
+<div id="record_my_physical_health">
+    <!--
+        症狀
+        體溫
+        身高
+        體重
+        體脂
+        腰圍
+        心跳
+        血壓
+        血糖
+        血氧
+        總膽固醇
+        尿酸
+        睡眠
+    -->
+    <div class="container mt-3 mb-3">
+        <el-tabs type="border-card">
+            <el-tab-pane label="生理量測">
+                <div class="row">
+                    <template v-for="(item, index) in measurement_types">
+                        <div class="col-6 col-lg-4">
+                            <a :href="`/health/${item.id}`">
+                            <div class="card mt-3" style="width: 100%;">
+                                <img :src="item.image_url" class="card-img-top" :alt="item.eng_name">
+                                <div class="card-body">
+                                <p class="card-text text-center">
+                                    <el-link :type="a_tag_color_types[getRandomInt(6)]" v-text="item.name"></el-link>
+                                </p>
+                                </div>
+                            </div>
+                            </a>
+                        </div>
+                    </template>
+                </div>
+            </el-tab-pane>
+            <el-tab-pane label="健康評估">
+
+            </el-tab-pane>
+        </el-tabs>
+    </div>
+</div>
+
+<script>
+    let record_my_physical_health = new Vue({
+        el: "#record_my_physical_health",
+        data: {
+            measurement_types: [],
+            a_tag_color_types: [
+                '',
+                'primary',
+                'success',
+                'warning',
+                'danger',
+                'info',
+            ]
+        },
+        created() {
+            let vm = this;
+            axios.get('/health/get_all_type').then(res => {
+                vm.measurement_types = res.data
+            })
+        },
+        methods: {
+            getRandomInt(max) {
+                return Math.floor(Math.random() * Math.floor(max));
+            }
+        },
+    })
+</script>

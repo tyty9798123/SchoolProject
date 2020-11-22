@@ -1,0 +1,411 @@
+<style>
+  .demo-table-expand {
+    font-size: 0;
+  }
+  .demo-table-expand label {
+    width: 90px;
+    color: #99a9bf;
+  }
+  .demo-table-expand .el-form-item {
+    margin-right: 0;
+    margin-bottom: 0;
+    width: 50%;
+  }
+  #hide_map {
+      height: 40px;
+      width: 100%;
+      background-color: #fff;
+      text-align: center;
+      transition: all 0.5s;
+      border-radius: 5px;
+      color: #444444;
+      border: 1px solid #DDDDDD;
+      margin-bottom: 5px;
+  }
+  #hide_map:hover {
+      background-color: #f9fafc; /*f9fafc*/
+      border: 1px solid #5599FF;
+      color: #5599FF;
+  }
+  #show_map {
+      height: 40px;
+      width: 100%;
+      background-color: #fff;
+      text-align: center;
+      transition: all 0.5s;
+      border-radius: 5px;
+      color: #444444;
+      border: 1px solid #DDDDDD;
+      margin-bottom: 5px;
+  }
+  #show_map:hover {
+      background-color: #f9fafc; /*f9fafc*/
+      border: 1px solid #5599FF;
+      color: #5599FF;
+  }
+  .el-icon-refresh{
+      transition: all 0.5s;
+  }
+  .el-icon-refresh:hover{
+    color: red;
+    font-size: 36px !important;
+  }
+</style>
+<div id="dashboard" style="display: none;">
+    <div class="row">
+        <div class="col-12">
+            <div>
+                <iframe src="/management/maps/" id="iframe" width="100%" height="350px" frameborder="0" scrolling="no">
+                </iframe>
+                <div id="show_map" style="display:none">
+                    <i class="el-icon-caret-bottom" style="font-size: 24px; margin-top: 5px;" ></i>顯示地圖
+                </div>
+                <div id="hide_map">
+                    <i class="el-icon-caret-top" style="font-size: 24px; margin-top: 5px;"></i>隱藏地圖
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-1">
+                    <div class="text-center">
+                        <el-tooltip class="item" effect="dark" content="重新讀取" placement="right">
+                            <i class="el-icon-refresh mt-2" @click="refreshTableData()" style="font-size: 24px;" aria-hidden="true"></i>
+                        </el-tooltip>
+                    </div>
+                </div>
+                <div class="col-5">
+                    <div class="text-center">
+                        <span class="mr-3">根據ID查詢</span>
+                        <el-input-number v-model="search_id"controls-position="right"></el-input-number>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <el-input
+                        type="textarea"
+                        autosize
+                        class="w-100"
+                        placeholder="全文檢索"
+                        @input="fullTextSearchChanged"
+                        v-model="full_text_search">
+                    </el-input>
+                </div>
+            </div>
+        </div>
+        <hr>
+
+    </div>
+    <hr>
+    <div class="text-center" v-if="!dataLoaded">
+        <%- include ../components/spinner1.ejs %>
+    </div>
+    <el-table
+    :data="tableData"
+    style="width: 100%"
+    @expand-change="expandChange"
+    v-if="dataLoaded"
+    >
+    <el-table-column type="expand">
+        <template slot-scope="props">
+        <el-form label-position="left" inline class="demo-table-expand">
+            <el-form-item label="姓名"">
+            <span>{{ props.row.name }}</span>
+            </el-form-item>
+            <el-form-item label="ID">
+            <span>{{ props.row.id }}</span>
+            </el-form-item>
+            <el-form-item label="年齡">
+            <span>{{ props.row.age }}</span>
+            </el-form-item>
+            <el-form-item label="身分證字號">
+            <span>{{ props.row.identification }}</span>
+            </el-form-item>
+            <el-form-item label="護照號碼">
+            <span>{{ props.row.passport }}</span>
+            </el-form-item>
+            <el-form-item label="性別">
+            <span>{{ props.row.gender }}</span>
+            </el-form-item>
+            <el-form-item label="生日">
+            <span>{{ props.row.birthday }}</span>
+            </el-form-item>
+            <el-form-item label="聯絡電話">
+            <span>{{ props.row.phone }}</span>
+            </el-form-item>
+            <el-form-item label="出境日期">
+            <span>{{ props.row.departure_date }}</span>
+            </el-form-item>
+            <el-form-item label="入境日期">
+            <span>{{ props.row.entry_date }}</span>
+            </el-form-item>
+            <el-form-item label="近期曾前往">
+            <template v-for="(item, index) in props.row.countries">
+                <span>{{ item }}</span>
+                <template v-if="index != props.row.countries.length -1">
+                    <span>、</span>
+                </template>
+            </template>
+            </el-form-item>
+            <el-form-item label="檢疫起始日">
+                <span>{{ props.row.isolationData.start_date }}</span>
+            </el-form-item>
+            <el-form-item label="檢疫結束日">
+                <span>{{ props.row.isolationData.end_date }}</span>
+            </el-form-item>
+            <el-form-item label="檢疫天數">
+                <span>{{ props.row.isolationData.days }}</span>
+            </el-form-item>
+            <el-form-item label="備註">
+                <span>{{ props.row.note }}</span>
+            </el-form-item>
+            <el-form-item label="健康狀態表">
+                <el-link :href="`/management?current_page=add_health_status&id=${props.row.id}&name=${props.row.name}`" type="primary" target="_blank">點擊新增、查看近期健康狀態資訊</el-link>
+            </el-form-item>
+        </el-form>
+        </template>
+    </el-table-column>
+    <el-table-column
+        label="類型"
+        prop="isolation_type">
+    </el-table-column>
+    
+    <el-table-column
+        label="ID"
+        prop="id">
+    </el-table-column>
+    <el-table-column
+        label="姓名"
+        prop="name">
+    </el-table-column>
+    <el-table-column
+        label="年齡"
+        prop="age"
+        width="150px">
+    </el-table-column>
+    <el-table-column
+        label="通訊地址"
+        prop="mailing_address"
+        width="300px">
+    </el-table-column>
+    <el-table-column
+        label="聯絡電話"
+        prop="phone">
+    </el-table-column>
+    <el-table-column
+        label="剩餘時間"
+        prop="remainingTime">
+    </el-table-column>
+    </el-table>
+</div>
+
+<script>
+    new Vue({
+        el: '#dashboard',
+        data: {
+            tableData: [],
+            cacheTableData: '',
+            dataLoaded: false,
+            full_text_search: '',
+            search_id: 0
+        },
+        created() {
+            let vm = this;
+            vm.getTableData();
+        },
+        methods: {
+            getTableData() {
+                let vm = this;
+                axios.get('/management/get_all_isolator_info')
+                .then( (res) => {
+                    vm.dataLoaded = true;
+                    let data = res.data;
+                    let newData = data.map( (item, index, array) => {
+                        //時間
+                        let target = new Date(item.isolationData.end_date).getTime();
+                        let second = (target - Date.now()) / 1000 >> 0;
+                        let remainingTime = vm.distance(second);
+                        //過濾類別
+                        switch (item.isolationData.isolation_types_id){
+                            case 1:
+                                item.isolation_type = "居家檢疫";
+                                break;
+                            case 2:
+                                item.isolation_type = "居家隔離";
+                                break;
+                            case 3:
+                                item.isolation_type = "自主健康管理";
+                                break;
+                        }
+                        //性別
+                        item.gender = item.gender == 1 ? "男性" : "女性";
+                        //出境/入境日期
+                        item.departure_date = vm.datetimeConvert(item.departure_date);
+                        item.entry_date = vm.datetimeConvert(item.entry_date);
+                        //檢疫起始日/檢疫結束日
+                        item.isolationData.start_date = vm.datetimeConvert(item.isolationData.start_date);
+                        item.isolationData.end_date = vm.datetimeConvert(item.isolationData.end_date);
+                        //過濾年齡
+                        let _target = new Date(item.birthday).getTime();
+                        let _second = (Date.now() - _target) / 1000 >> 0;
+                        let years = vm.dateDistance(_second);
+                        if ( years != 'ERROR' ) {
+                            item.age = years / 365 >> 0;
+                        }
+                        else{
+                            item.age = "錯誤。"
+                        }
+                        //生日
+                        item.birthday = vm.datetimeConvert(item.birthday);
+                        return {
+                            ...item,
+                            remainingTime,
+                        }
+                    });
+                    vm.tableData = newData;
+                    vm.cacheTableData = newData;
+                })
+                .catch( () => alert('讀取資料失敗。') );
+            },
+            distance(x) {
+                var day = x / 86400 >> 0;
+                var hour;
+                if (x < 86400) {
+                    hour = x / 3600 >> 0;
+                } 
+                else {
+                    hour = x % 86400 / 3600 >> 0;
+                }
+                var minute = x % 3600 / 60 >> 0;
+                var second = x % 60;
+
+                if (second >= 0) {
+                    return day + " 天 " + hour + " 時"
+                } else {
+                    return "已結束";
+                }
+            },
+            datetimeConvert(UNIX_timestamp){  
+                var a = new Date(UNIX_timestamp);
+                var months = ['01','02','03','04','05','06','07','08','09','10','11','12'];
+                var year = a.getFullYear(), month = months[a.getMonth()], date = a.getDate(),
+                date = a.getDate(), hour = a.getHours(), min = a.getMinutes(), sec = a.getSeconds();
+                if (date < 10){
+                    date = "0" + date;
+                }
+                if (sec < 10){
+                    sec = "0" + sec;
+                }
+                if (hour < 10){
+                    hour = "0" + hour;
+                }
+                if (min < 10){
+                    min = "0" + min;
+                }
+                return year + '-' + month + '-' + date + ' '
+            },
+            dateDistance(x) {
+                var day = x / 86400 >> 0;
+                var hour;
+                if (x < 86400) {
+                    hour = x / 3600 >> 0;
+                } 
+                else {
+                    hour = x % 86400 / 3600 >> 0;
+                }
+                var minute = x % 3600 / 60 >> 0;
+                var second = x % 60;
+
+                if (second >= 0) {
+                    return day
+                } else {
+                    return "ERROR";
+                }
+            },
+            expandChange(row, expandedRows) {
+                let changed = false;
+                expandedRows.forEach((item, index, array) => {
+                    if (item.id === row.id){
+                        document.getElementById("iframe").src = `/management/maps/?id=${row.id}`;
+                        changed = true;
+                    }
+                });
+                if (!changed){
+                    document.getElementById("iframe").src = `/management/maps`;
+                }
+            },
+            fullTextSearchChanged(){
+                let vm = this;
+                let subText = vm.full_text_search.trim();
+                vm.tableData = [];
+                vm.cacheTableData.forEach((item, index, array) => {
+                    Object.values(item).some( (_item, _index, _array) =>{
+                        _item = String(_item);
+                        if(_item.includes(subText)){
+                            vm.tableData.push(vm.cacheTableData[index]);
+                            return true;
+                        }
+                    })
+                })   
+            },
+            refreshTableData(){
+                let vm = this;
+                vm.dataLoaded = false;
+                vm.tableData = [];
+                vm.cacheTableData = [];
+                vm.getTableData();
+            }
+        },
+        watch: {
+            search_id: function(){
+                let vm = this;
+                let search_id = vm.search_id;
+                if ( Number(search_id) <= 0 ){
+                    vm.tableData = vm.cacheTableData;
+                    return;
+                }
+                vm.tableData = [];
+                vm.cacheTableData.some( (item, index, array) => {
+                    if (item.id == search_id){
+                        vm.tableData.push(item);
+                        return true;
+                    }
+                })
+            }
+        }
+    })
+
+
+    $(document).ready(function(){
+        $('#hide_map').hover( function(){
+            $('#hide_map').html(
+                `<i class="el-icon-caret-top" style="font-size: 24px; margin-top: 5px;"></i>`+
+                `隱藏地圖`
+            )
+        })
+        $('#hide_map').mouseleave( function(){
+            $('#hide_map').html(
+                `<i class="el-icon-caret-top" style="font-size: 24px; margin-top: 5px;"></i>`+
+                `隱藏地圖`
+            )
+        })
+        $('#hide_map').click( function(){
+            $('#iframe').slideToggle("fast");
+            $('#hide_map').hide();
+            $('#show_map').show();
+        })
+    })
+
+    $(document).ready(function(){
+        $('#show_map').mouseleave( function(){
+            $('#show_map').html(
+                `<i class="el-icon-caret-bottom" style="font-size: 24px; margin-top: 5px;"></i>`+
+                `顯示地圖`
+            )
+        })
+        $('#show_map').click( function(){
+            $("#iframe").slideToggle("fast");
+            $('#show_map').hide();
+            $('#hide_map').show();
+        })
+    })
+</script>
+

@@ -1,0 +1,15 @@
+image: alpine:3.7
+
+stages:
+  - build
+
+build_job:
+  stage: build
+  tags:
+    - covid19
+  only:
+    - master
+  script:
+    - mkdir -p /nodejs/covid19
+    - rm -rf  /nodejs/covid19/*
+    - cp -R * /nodejs/covid19

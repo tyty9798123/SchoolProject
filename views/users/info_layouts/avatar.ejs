@@ -1,0 +1,40 @@
+<!-- 頭像區 -->
+<el-card shadow="always">
+    設定個人頭像
+</el-card>
+<div class="demo-basic--circle mt-3">
+    <div class="block">
+        <el-avatar :size="150" id="avatar_image" src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png"></el-avatar>
+    </div>
+</div>
+<!-- 大頭貼、真實姓名、自我介紹 -->
+<button class="button-secondary pure-button" type="button">上傳圖片</button>
+<button onclick="delete_img()" type="button" class="button-error pure-button" id="delete-img">移除圖片</button>
+<input type="file" style="display: none" name="logo" onchange="readAsDataURL()" multiple="multiple" class="form-control-file" id="file" accept="image/gif, image/jpeg, image/png" >
+<div id="result"></div>
+<!-- 頭像區 -->
+<br>
+<el-card shadow="always">
+    姓名、自我介紹
+</el-card>
+<br>
+<div class="row">
+    <div class="col-4">
+        真實姓名
+    </div>
+    <div class="col-8">
+        <input class="form-control" type="text" id="real-name">
+    </div>
+</div>
+<div class="row">
+    <div class="col-4" style="margin-top: 40px;">
+        <span>自我介紹</span>
+    </div>
+    <div class="col-8">
+        <div class="form-group mt-3">
+            <textarea class="form-control" id="self-introduction" rows="3"></textarea>
+        </div>
+    </div>
+</div>
+<hr>
+<button type="button" class="btn btn-info float-right" id="avatar_save">儲存</button>

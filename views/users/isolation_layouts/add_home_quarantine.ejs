@@ -1,0 +1,139 @@
+<style>
+    .divide_hr{
+        display: none;
+    }
+    @media screen and (max-width: 991px) {
+        .divide_hr{
+            display: block;
+        }
+        .hidden_when_md{
+            display: none;
+        }
+        .el-transfer__buttons{
+            display: block;
+        }
+    }
+</style>
+<div class="row mt-3" id="add_home_quarantine">
+    <div class="col-lg-6 col-md-12">
+        <input class="form-control" type="text" placeholder="身分證字號（供有戶籍國民在國內使用）">
+    </div>
+    <div class="col-lg-6 col-md-12">
+        <hr class="divide_hr">
+        <input class="form-control" type="text" placeholder="護照號碼">
+    </div>
+    <div class="col-12">
+        <hr>
+        <input class="form-control" type="text" placeholder="通訊地址">
+    </div>
+    <div class="col-12">
+        <hr>
+        <input class="form-control" type="text" placeholder="戶籍地址">
+        <hr class="hidden_when_md">
+    </div>
+    <div class="col-12">
+        <hr class="divide_hr">
+        <div class="row">
+            <div class="col-3">
+                <div class="text-center">
+                    出境<br>日期
+                </div>
+            </div>
+            <div class="col-9">
+                <input class="form-control" type="date" id="example-date-input">
+            </div>
+        </div>
+        <hr class="hidden_when_md">
+    </div>
+    <div class="col-12">
+        <hr class="divide_hr">
+        <div class="row">
+            <div class="col-3">
+                <div class="text-center">
+                    入境<br>日期
+                </div>
+            </div>
+            <div class="col-9">
+                <input class="form-control" type="date" id="example-date-input">
+            </div>
+        </div>
+        <hr>
+    </div>
+    <div class="col-12">
+        <hr class="divide_hr">
+        <div class="row">
+            <div class="col-4">
+                <div class="text-center">
+                    <el-button type="primary" plain>新增國家數量</el-button>
+                </div>
+            </div>
+            <div class="col-8">
+                <select class="form-control">
+                    <option>Default select</option>
+                </select>
+            </div>
+        </div>
+        <hr>
+    </div>
+    <div class="col-12">
+        <hr class="divide_hr">
+        <div class="row">
+            <div class="col-3">
+                <div class="text-center">
+                    檢疫起始日
+                </div>
+            </div>
+            <div class="col-9">
+                <input class="form-control" type="date" id="example-date-input">
+            </div>
+        </div>
+        <hr>
+    </div>
+    <div class="col-12">
+        <hr class="divide_hr">
+        <div class="row">
+            <div class="col-3">
+                <div class="text-center">
+                    檢疫結束日
+                </div>
+            </div>
+            <div class="col-9">
+                <input class="form-control" type="date" id="example-date-input">
+            </div>
+        </div>
+        <hr>
+    </div>
+    <div class="col-12">
+        <div class="row">
+            <div class="col-4">
+                <div class="text-center">
+                    <span class="mb-3">檢疫天數</span>
+                    <br><br>
+                    <input class="form-control" type="number" id="example-number-input">
+                </div>
+            </div>
+            <div class="col-8">
+                <div class="form-group">
+                    <div class="text-center">
+                        <label for="exampleFormControlTextarea1">備註事項</label>
+                    </div>
+                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12">
+        <hr>
+        <el-button type="info" class="w-100">送出居家檢疫資訊</el-button>
+    </div>
+</div>
+<script>
+    new Vue({
+        el: "#add_home_quarantine",
+        data: {
+
+        },
+        created(){
+        },
+    })
+</script>

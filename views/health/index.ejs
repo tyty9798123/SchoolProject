@@ -1,0 +1,154 @@
+<% extend('../layouts/default') %>
+<br>
+<style>
+    .font-style{
+        font-family: 微軟正黑體;
+    }
+</style>
+<div class="container">
+    <div class="alert alert-secondary text-center font-style"  role="alert">
+        <h3><b><%= result.name %></b></h3>
+    </div>
+    <div id="app">
+        <el-tabs type="border-card">
+            <el-tab-pane label="<%= result.name %>">
+                <form>
+                    <% if (result.name == '體溫') {%>
+                        <div class="form-group">
+                            <label >請輸入您的<%= result.name %></label>
+                            <input type="number" class="form-control"  placeholder="36.5°C">
+                        </div>
+                    <%}%>
+                    <% if (result.name == '身高') {%>
+                        <div class="form-group">
+                            <label >請輸入您的<%= result.name %></label>
+                            <input type="number" class="form-control"  placeholder="165cm">
+                        </div>
+                    <%}%>
+                    <% if (result.name == '體重') {%>
+                        <div class="form-group">
+                            <label >請輸入您的<%= result.name %></label>
+                            <input type="number" class="form-control"  placeholder="60kg">
+                        </div>
+                    <%}%>
+                    <% if (result.name == '體脂') {%>
+                        <div class="form-group">
+                            <label >請輸入您的<%= result.name %></label>
+                            <input type="number" class="form-control"  placeholder="25%">
+                        </div>
+                    <%}%>
+                    <% if (result.name == '腰圍') {%>
+                        <div class="form-group">
+                            <label >請輸入您的<%= result.name %></label>
+                            <input type="number" class="form-control"  placeholder="68cm">
+                        </div>
+                    <%}%>
+                    <% if (result.name == '心跳') {%>
+                        <div class="form-group">
+                            <label >請輸入您的<%= result.name %></label>
+                            <input type="number" class="form-control"  placeholder="100bpm">
+                        </div>
+                    <%}%>
+                    <% if (result.name == '血壓') {%>
+                        <div class="form-group">
+                            <label >請輸入您的<%= result.name %></label>
+                            <input type="text" class="form-control"  placeholder="117/65 mmHg">
+                        </div>
+                    <%}%>
+                    <% if (result.name == '血糖') {%>
+                        <div class="form-group">
+                            <label >請輸入您的<%= result.name %></label>
+                            <input type="number" class="form-control"  placeholder="85 mg/dl">
+                        </div>
+                    <%}%>
+                    <% if (result.name == '血氧') {%>
+                        <div class="form-group">
+                            <label >請輸入您的<%= result.name %></label>
+                            <input type="number" class="form-control"  placeholder="90%">
+                    <%}%>  
+                    <% if (result.name == '總膽固醇') {%>
+                        <div class="form-group">
+                            <label >請輸入您的<%= result.name %></label>
+                            <input type="number" class="form-control"  placeholder="250 mg/dl">
+                        </div>
+                    <%}%>
+                    <% if (result.name == '尿酸') {%>
+                        <div class="form-group">
+                            <label >請輸入您的<%= result.name %></label>
+                            <input type="number" class="form-control"  placeholder="6 mg/dL">
+                        </div>
+                    <%}%>
+                    <% if (result.name == '睡眠') {%>
+                        <div class="form-group">
+                            <label >請輸入您的<%= result.name %></label>
+                            <input type="number" class="form-control"  placeholder="7.5小時">
+                        </div>
+                    <%}%>
+
+
+                
+                
+
+
+
+                   
+                    <button type="button" class="btn btn-primary" @click="saveData()">儲存</button>
+                  </form>
+                  
+            </el-tab-pane>
+            <el-tab-pane label="歷史紀錄">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                        <th scope="col"><%= result.name %></th>
+                        <th scope="col">DateTime</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% for (let i = 0; i < past_data.length; i++) {%>
+                        <tr>
+                            <td><%- past_data[i].value %></td>
+                            <td><%- timestamp.timeConverter(past_data[i].date_time) %></td>
+                        </tr>
+                        <% } %>
+                    </tbody>
+                </table>
+
+
+
+            </el-tab-pane>
+            
+
+            </el-tabs>
+    </div>
+</div>
+<script>
+    new Vue({
+        el:'#app',
+        data: {
+            physical_health_type_id: ''
+        },
+        created(){
+            let vm = this;
+            vm.physical_health_type_id = window.location.pathname.split('/')[2];
+        },
+        methods: {
+            saveData() {
+                let vm = this;
+                let data = {
+                    physical_health_type_id: vm.physical_health_type_id,
+                    value: $('.form-control').val()
+                }
+                axios.post('/health', data).then( (res) => {
+                    if (res.data.success){
+                        alert('Success');
+                        location.reload();
+                    }
+                })
+            }
+        }
+    })
+</script>
+
+
+

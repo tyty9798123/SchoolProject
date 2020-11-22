@@ -1,0 +1,153 @@
+<% extend('./layouts/default')%>
+<style>
+  #sign_up{
+    background-color: #f9f9f9;
+  }
+  #codeimg{
+    cursor: pointer;
+  }
+</style>
+<div id="sign_up">
+  <div class="container mb-2">
+    <br>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="#"><i class="el-icon-s-home"></i>首頁</a></li>
+        <li class="breadcrumb-item"><a href="#"><i class="el-icon-user-solid"></i>會員</a></li>
+        <li class="breadcrumb-item active" aria-current="page">註冊</li>
+      </ol>
+    </nav>
+    
+    <div class="container p-5 mb-5" style="box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04); background-color:white;">
+      <div class="text-center mb-3">
+        <a class="btn btn-primary" href="/auth/facebook"><i class='fa fa-facebook-square' style='font-size:24px'></i>
+          使用 Facebook 註冊或登入</a>
+      </div>
+      <hr width="40%" class="float-left">
+      <hr width="40%" class="float-right">
+      <br>
+      <center><span style="color:black;font-size: 20px;">或</span></center>
+      <hr width="40%" class="float-left">
+      <hr width="40%" class="float-right">
+      <hr>
+      <el-tooltip class="item" effect="dark" content="輸入3個字以上" placement="bottom-start">
+        <el-input v-model="name" placeholder="使用者名稱"></el-input>
+      </el-tooltip>
+      <br><br>
+      <el-tooltip class="item" effect="dark" content="輸入正確的Email" placement="bottom">
+        <el-input v-model="account" placeholder="Email"></el-input>
+      </el-tooltip>
+      <br><br>
+      <el-tooltip class="item" effect="dark" content="輸入6~20個字元" placement="bottom-end">
+        <el-input v-model="password" placeholder="密碼" type="password"></el-input>
+      </el-tooltip>
+      <br><br>
+      <el-input v-model="confirmed_password" placeholder="確認密碼" type="password"></el-input>
+      <br><br>
+      <div class="row" style="margin-top: 10px;"> 
+        <div class="col-4">
+            <center>
+                <span style="font-size: 18px;">請輸入正確的驗證碼：</span>
+            </center>
+        </div>
+        <div class="col-8">
+            <div class="row">
+                <div class="col-md-6 col-sm-12">
+                    <input type="text" v-model="captcha_text" class="form-control" placeholder="" name="code" aria-describedby="helpId">
+                </div>
+                <div class="col-md-6 col-sm-12">
+                    <center>
+                        <span id="codeimg" @click="getCaptcha()"></span>
+                    </center>
+                </div>
+            </div>
+        </div>
+      </div>
+      <br>
+      <div style="text-align: center;">
+        <template v-if="check_input_is_valid">
+          <el-button type="primary" plain @click="singupButtonClicked" style="width: 100px;">註冊</el-button>
+        </template>
+        <template v-else>
+          <el-button type="danger" disabled plain style="width: 100px;">註冊</el-button>
+        </template>
+      </div>
+    </div>
+    <br>
+  </div>
+</div>
+
+<script>
+  new Vue({
+    el: '#sign_up',
+    created(){
+      var vm = this;
+      vm.getCaptcha();
+    },
+    data: {
+      name: '',
+      account: '',
+      password: '',
+      confirmed_password: '',
+      captcha_text: '',
+    },
+    methods: {
+      singupButtonClicked(){
+        // id, name, account, password, is_admin, status, 
+        let vm = this;
+        let data = {
+          name: vm.name,
+          account: vm.account,
+          password: vm.password,
+          captcha_text: vm.captcha_text
+        }
+        axios.post('/signup', data)
+        .then(function(res){
+          if(res.data.success){
+            vm.$notify({
+              title: '成功',
+              message: '註冊成功，前往登入頁面登入吧！',
+              type: 'success'
+            });
+            vm.name = ''
+            vm.account = ''
+            vm.password = ''
+            vm.confirmed_password = ''
+            vm.captcha_text = ''
+          }
+          else{
+            vm.$notify.error({
+              title: '錯誤',
+              message: `註冊失敗，${res.data.message}`
+            });
+          }
+        })
+        .catch(function(res){
+          vm.$message.error(`與伺服器連線中斷。`);
+        })
+      },
+      getCaptcha(){
+        var xhr = new XMLHttpRequest();
+        xhr.open('post', '/captcha', true);
+        xhr.setRequestHeader('Content-type', 'application-json');
+        xhr.send();
+        xhr.onload = function(){
+            var response = JSON.parse(xhr.responseText);
+            var codeimg = document.getElementById("codeimg");
+            codeimg.innerHTML = response.result.img;
+        }
+      }
+    },
+    computed: {
+      check_input_is_valid(){
+        let vm = this;
+        if (vm.name.length >= 3 
+        && vm.password.length >= 6 && vm.password.length <= 20 && vm.password == vm.confirmed_password
+        && vm.captcha_text.length == 5){
+          return true;
+        }
+        return false;
+      }
+    }
+  })
+</script>

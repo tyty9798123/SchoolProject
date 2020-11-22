@@ -1,0 +1,257 @@
+<style>
+    .form-disabled{
+        border: 1px solid red;
+    }
+</style>
+<div id="add_health_status" style="display: none;">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <span style="font-size: 16px;">
+                    健康狀態資訊 - {{ form.isolatorName }}
+                    </span>
+                </div>
+            </div>
+            <hr>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-6 col-md-12">
+            <div class="row">
+                <div class="col-6">
+                    編號：{{ form.isolatorID }}
+                </div>
+                <div class="col-6">
+                    姓名：{{ form.isolatorName }}
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-6">
+                    <div class="block">
+                        <el-date-picker
+                        class="w-100"
+                        v-model="form.caringTime"
+                        type="datetime"
+                        placeholder="電話關懷時間（必填）">
+                        </el-date-picker>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <input type="text" placeholder="體溫" class="form-control" :class="{ 'form-disabled': !checkJustNumber }" v-model="form.temperature" >
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-12">
+                    <div>
+                        疑似症狀：（可複選）
+                        <br><br>
+                        <div class="container">
+                            <div class="row">
+                                <div class="text-center" v-if="isLoading">
+                                    <%- include ../components/spinner1.ejs %>
+                                </div>
+                                <el-checkbox-group v-model="form.checkboxGroup1" size="small" style="margin-top: 3px;" v-if="!isLoading">
+                                    <template v-for="(item, index) in types">
+                                        <template v-if="index == 0">
+                                            <el-checkbox  :label="`${item.id}.${item.type_name}`" class='col-3' style="margin-left: 10px;" border size="medium"></el-checkbox>
+                                        </template>
+                                        <template v-else>
+                                        <el-checkbox  :label="`${item.id}.${item.type_name}`" class='col-3' border size="medium"></el-checkbox>
+                                        </template>
+                                    </template>
+                                </el-checkbox-group>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-12">
+                    <el-input type="textarea"  :rows="5"  placeholder="備註事項" v-model="form.note"></el-input>
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-12">
+                    <el-button type="primary" class="w-100" plain @click="submit()">新增健康狀態資料</el-button>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-12">
+            *** 該民眾歷次紀錄顯示區、溫度狀態表(尚未完工) ***
+            <iframe :src="`/management/personal_temperature?isolator_id=${form.isolatorID}`" width="100%" height="350px" frameborder="0" scrolling="no">
+            </iframe>
+            <div class="text-center">
+                <el-link type="warning" :href="`/management/personal_temperature?isolator_id=${form.isolatorID}`" target="_blank">{{form.isolatorName}}的近期體溫表（近10次登記）</el-link>
+            </div>
+            <hr>
+            <el-button type="primary" :loading="loadingData" @click="loadData();">讀取健康狀態資料</el-button>
+            <hr>
+            <el-collapse v-model="activeNames" @change="handleChange">
+                <template v-for="(item, index) in healthStatus.slice().reverse()">
+                <el-collapse-item :title="item.caring_at" :name="index">
+                    <div>體溫：{{ item.temperature }}</div>
+                    <div>出現症狀：{{ item.type_name }}</div>
+                    <div>備註：{{ item.note }}</div>
+                </el-collapse-item>
+                </template>
+            </el-collapse>
+        </div>
+    </div>
+</div>
+
+<script>
+    new Vue({
+        el: "#add_health_status",
+        data: {
+            form: {
+                temperature: '',
+                checkboxGroup1:[],
+                note: '',
+                caringTime: '',
+                isolatorID: '',
+                isolatorName: '',
+            },
+            activeNames: ['0'],
+            types: [],
+            isLoading: true,
+            allowNumberChars: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "."],
+            loadingData: false,
+            healthStatus: [],
+        },
+        mounted() {
+           let vm=this;
+           vm.getAllSymptomType();
+           vm.form.isolatorID = vm.getQueryStringValue('id');
+           vm.form.isolatorName = vm.getQueryStringValue('name');
+        },
+        methods: {
+            checkJustNumberAndDot(value){
+                //若為空
+                //if (value.length <=0) 
+                //    return false;
+                //若第一個或最後一個為.
+                if (value[0] === '.' || value[value.length -1 ] === '.' ){
+                    return false;
+                }
+                let dotCount = 0;
+                for( let i = 0; i < value.length; i++ ){
+                    if ( !this.allowNumberChars.includes(value[i]) ){
+                        return false;
+                    }
+                    if ( value[i] == '.' ){
+                        dotCount++;
+                    }
+                }
+                if (dotCount > 1){
+                    return false;
+                }
+                return true;
+            },
+            getAllSymptomType(){
+                let vm = this;
+                axios.get('/management/get_all_symptom_types')
+                .then((res) => {
+                    vm.types = res.data;
+                    vm.isLoading = false;
+                })
+            },
+            submit(){
+                let vm = this;
+                if (!vm.checkJustNumber){
+                    vm.$notify.error({
+                        title: '錯誤',
+                        message: '體溫格式不正確。'
+                    });
+                    return;
+                }
+                if (vm.form.caringTime == ''){
+                    vm.$notify.error({
+                        title: '錯誤',
+                        message: '請輸入電話關心時間。'
+                    });
+                    return;
+                }
+                let symptomTypes = [];
+                for(let i = 0; i < vm.form.checkboxGroup1.length; i++){
+                    symptomTypes.push( vm.form.checkboxGroup1[i].split('.')[0] );
+                }
+                let data = {
+                    isolatorID: vm.form.isolatorID,
+                    caringTime: vm.form.caringTime,
+                    temperature: vm.form.temperature,
+                    symptomTypes,
+                    note: vm.form.note,
+                }
+                axios.post('/management/add_health_status', data)
+                .then(res => {
+                    if (res.data.success){
+                        vm.$notify({
+                            title: '成功',
+                            message: '成功新增健康狀態。',
+                            type: 'success'
+                        });
+                    }else{
+                        vm.$notify.error({
+                            title: '錯誤',
+                            message: res.data.message,
+                        });
+                    }
+                })
+            },
+            handleChange(){
+
+            },
+            loadData(){
+                let vm = this;
+                vm.loadingData = true;
+                axios.get(`/management/get_health_status_by_id?isolator_id=${vm.form.isolatorID}`)
+                .then( (res) => {
+                    let data = res.data;
+                    console.log(data);
+
+                    let caring_at = new Set();
+                    //先把caring_at取出來
+                    for ( let i = 0; i < data.length; i++ ){
+                        if ( !caring_at.has(data[i].caring_at) ){
+                            caring_at.add( data[i].caring_at );
+                        }
+                    }
+                    caring_at = Array.from(caring_at);
+                    let array = [];
+                    for( let i = 0; i < caring_at.length; i++ ){
+                        array[i] = {}
+                        for ( let j = 0; j < data.length; j++ ){
+                            if (caring_at[i] === data[j].caring_at){
+                                array[i] = {
+                                    temperature: data[j].temperature,
+                                    note: data[j].note,
+                                    caring_at: data[j].caring_at,
+                                    type_name: (array[i].type_name || "") + "、" + data[j].type_name
+                                }
+                            }
+                        }
+                        array[i].type_name = array[i].type_name.substr(1)
+                    }
+                    console.log(array);
+                    vm.healthStatus = array;
+                    vm.loadingData = false;
+                });
+            },
+            getQueryStringValue (key) {  
+                return decodeURIComponent(window.location.search.replace(new RegExp("^(?:.*[&\\?]" + encodeURIComponent(key).replace(/[\.\+\*]/g, "\\$&") + "(?:\\=([^&]*))?)?.*$", "i"), "$1"));  
+            }
+        },
+        computed: {
+            checkJustNumber(){
+                let vm = this;
+                value = vm.form.temperature.split('');
+                return vm.checkJustNumberAndDot(value);
+            },
+        }
+    })
+</script>

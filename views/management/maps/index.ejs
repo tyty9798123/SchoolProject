@@ -1,0 +1,91 @@
+<%- include ./dependence.ejs %>
+<style>
+    @import url('/stylesheets/map.css');
+</style>
+<div id="maps">
+    <div class="row">
+        <div class="col-3">
+            
+        </div>
+
+        <div class="col-9" id="map-field">
+            <div id="map"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var map = L.map('map', {
+        center: [25.0768252,121.3886134],
+        zoom: 16
+    });
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+    var greenIcon = new L.Icon({
+        iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowSize: [41, 41]
+    });
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("get","/management/get_all_isolator_info");
+    xhr.send();
+    xhr.onload = function(){
+        console.log(JSON.parse(xhr.responseText))
+        var data = JSON.parse(xhr.responseText)
+        if ( getUrlParameter('id') == "" ){
+            var markers = new L.MarkerClusterGroup().addTo(map);;
+            //顯示全部
+            for(let i =0;data.length>i;i++){
+                if (!data[i].longitude){
+                    continue;
+                }
+                let str = `姓名: ${data[i].name} <br> 地址: <a href="https://www.google.com/maps/place/${data[i].mailing_address}" target='_blank'>${data[i].mailing_address}</a>`;
+
+                markers.addLayer(
+                    L.marker(
+                        [data[i].latitude,data[i].longitude], {icon: greenIcon}
+                    )
+                    .bindPopup(str)
+                        
+                );
+                // add more markers here...
+                // L.marker().addTo(map)
+                //   )
+            }
+            map.addLayer(markers);
+        }
+        else {
+            let id = getUrlParameter('id');
+            let isolatorIndex;
+            data.forEach( (item, index, array) => {
+                if (item.id == id){
+                    isolatorIndex = index;
+                }
+            });
+
+            let str = `姓名: ${data[isolatorIndex].name} <br> 地址: <a href="https://www.google.com/maps/place/${data[isolatorIndex].mailing_address}" target='_blank'>${data[isolatorIndex].mailing_address}</a>`;
+            L.marker(
+                [data[isolatorIndex].latitude,data[isolatorIndex].longitude], {icon: greenIcon}
+            ).addTo(map).bindPopup(str).openPopup()
+            map.panTo(new L.LatLng(data[isolatorIndex].latitude, data[isolatorIndex].longitude));
+
+            // add more markers here...
+            // L.marker().addTo(map)
+            //   )
+        }
+    }
+        
+    
+
+    function getUrlParameter(name) {
+        name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+        var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+        var results = regex.exec(location.search);
+        return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+    };
+</script>

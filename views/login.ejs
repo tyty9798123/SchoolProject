@@ -1,0 +1,44 @@
+<% extend('./layouts/default')%>
+<div class="container mt-2 mb-2">
+    <div id="log_in">
+        <el-input v-model="account" placeholder="帳號"></el-input>
+        <el-input v-model="password" placeholder="密碼" type="password"></el-input>
+        <el-button type="primary" @click="loginClicked()">登入</el-button>
+    </div>
+</div>
+
+<script>
+    new Vue({
+        el: '#log_in',
+        data: {
+            account: '',
+            password: '',
+        },
+        methods: {
+            loginClicked(){
+                let vm = this;
+                let data = {
+                    account: vm.account,
+                    password: vm.password,
+                }
+                axios.post('/login', data)
+                .then(function(res){
+                    if(res.data.success){
+                        vm.$message({
+                            message: '登入成功！',
+                            type: 'success'
+                        });
+                        location.href = '/';
+                    }
+                    else{
+                        vm.$message.error(`登入失敗，${res.data.message}`);
+                    }
+                })
+                .catch(function(res){
+                    vm.$message.error(`與伺服器連線中斷。`);
+                })
+                
+            }
+        }
+    })
+</script>

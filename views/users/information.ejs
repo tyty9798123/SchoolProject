@@ -1,0 +1,103 @@
+<% extend('../layouts/default')%>
+<style>
+    /* For Avatar */
+    .el-avatar > img {
+        width: 100%;
+    }
+    /* For Details */
+    #self-info{
+        margin-top: 8px;
+        margin-bottom: 8px;
+    }
+    #self-info div {
+        margin-top: 13px;
+    }
+    #info_background{
+        width: 100%;
+        height: 300px;
+        background-size: cover;
+        background-image: url("https://images.pexels.com/photos/317355/pexels-photo-317355.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260");
+    }
+</style>
+<!-- PureCSS -->
+<link rel="stylesheet" href="https://unpkg.com/purecss@1.0.1/build/pure-min.css" integrity="sha384-oAOxQR6DkCoMliIh8yFnu25d7Eq/PHS21PClpwjOTeU2jRSq11vu66rf90/cZr47" crossorigin="anonymous">
+<link rel="stylesheet" href="/stylesheets/pure_button.css">
+<!-- Cropper -->
+<link  href="/cropperjs/dist/cropper.css" rel="stylesheet">
+<script src="/cropperjs/dist/cropper.js"></script>
+<div id="info">
+    <div class="container mt-3">
+        <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
+            <el-tab-pane label="個人介紹" name="first">
+                <div class="text-center">
+                    <%- include ./info_layouts/avatar.ejs %>
+                </div>
+            </el-tab-pane>
+            <el-tab-pane label="個人檔案" name="second">
+                <%- include ./info_layouts/details.ejs %>
+            </el-tab-pane>
+                
+            <el-tab-pane label="變更密碼" name="third">
+                
+            </el-tab-pane>
+        </el-tabs>
+    </div>
+</div>
+<!-- For Vue -->
+<script>
+    let vm = new Vue({
+        el: "#info",
+        data: {
+            activeName: 'first'
+        },
+        methods: {
+            handleClick(tab, event) {
+                console.log(tab, event);
+            }
+        }
+    })
+</script>
+<!-- For First Tag -->
+<script>
+    $(document).ready(function(){
+        $('.button-secondary').click(function(){
+            $('.form-control-file')[0].click();
+        })
+        $('#avatar_save').click(()=>{
+            /* post values */
+            let avatar = document.getElementById("file").files[0] || '';
+            let read_name = document.getElementById('real-name').value || '';
+            let self_introduction = document.getElementById('self-introduction').value || '';
+            /* Prepare for AJAX */
+            let xhr = new XMLHttpRequest();
+            xhr.open('post', '/users/update_avatar', true);
+            xhr.setRequestHeader('Content-type', 'multipart/form-data');
+            let formData = new FormData();
+            formData.append('avatar', avatar);
+            formData.append('read_name', read_name);
+            formData.append('self_introduction', self_introduction);
+            xhr.send(formData);
+        })
+    })
+    var delete_img = function(){
+        var file = document.getElementById('file');
+        file.outerHTML = file.outerHTML;
+        $('#result').hide(500);
+        $('#avatar_image>img').attr('src', 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png');
+    }
+    var result = document.getElementById("result");  
+    var file = document.getElementById("file");
+    
+    function readAsDataURL(){  
+        var file = document.getElementById("file").files;
+        var result = document.getElementById("result");  
+        for(i = 0; i< file.length; i ++) {
+            var reader = new FileReader();    
+            reader.readAsDataURL(file[i]);  
+            reader.onload=function(e){
+                let imageResult = this.result;
+                $('#avatar_image>img').attr('src', imageResult);
+            }
+        }
+    }
+</script>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal_Temperature_Defferent_Chart</title>
+    <script src="/js/Chart.min.js"></script>
+</head>
+<body>
+    <style>
+        canvas{
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+
+
+    <canvas id="canvas"></canvas>
+
+
+    <script>
+    function getQueryStringValue (key) {  
+            return decodeURIComponent(window.location.search.replace(new RegExp("^(?:.*[&\\?]" + encodeURIComponent(key).replace(/[\.\+\*]/g, "\\$&") + "(?:\\=([^&]*))?)?.*$", "i"), "$1"));  
+    }
+    var lineChartData = {
+        labels: ["2020/01/01", "2020/01/07", "2020/01/14", "2020/01/21", "2020/01/28", "2020/02/04", "2020/02/11", "2020/02/18", "2020/02/25"], //顯示區間名稱
+        datasets: [{
+            label: '體溫', // tootip 出現的名稱
+            lineTension: 0, // 曲線的彎度，設0 表示直線
+            backgroundColor: "#33CCFF",
+            borderColor: "#33CCFF",
+            borderWidth: 5,
+            data: [10, 12, 15, 18, 22, 33, 50, 60, 130], // 資料
+            fill: false, // 是否填滿色彩
+        }]
+    };
+    function drawLineCanvas(ctx, data) {
+        window.myLine = new Chart(ctx, {  //先建立一個 chart
+            type: 'line', // 型態
+            data: data,
+            options: {
+                responsive: true,
+                legend: { //是否要顯示圖示
+                    display: true,
+                },
+                tooltips: { //是否要顯示 tooltip
+                    enabled: true
+                },
+                scales: {  //是否要顯示 x、y 軸
+                    xAxes: [{
+                        display: true
+                    }],
+                    yAxes: [{
+                        display: true
+                    }]
+                },
+            }
+        });
+    };
+    window.onload = function () {
+        var ctx = document.getElementById("canvas").getContext("2d");
+        
+        let id = getQueryStringValue('isolator_id');
+        //取得資料
+        var xhr = new XMLHttpRequest();
+        xhr.open('get', `/management/get_recent_temperature_by_id?id=${id}`, true);
+        xhr.send();
+        xhr.onload = function(){
+            let res = JSON.parse(xhr.responseText);
+            let temperatures = [];
+            let dateTimes = [];
+            res.result.forEach( item => {
+                temperatures.push(item.temperature);
+                dateTimes.push(item.caring_at.split('-')[1] + "-" +  item.caring_at.split('-')[2].split(' ')[0] + " " + item.caring_at.split(' ')[1].split(':')[0] + "時" );
+            })
+            lineChartData.labels = dateTimes;
+            lineChartData.datasets[0].data = temperatures;
+            drawLineCanvas(ctx,lineChartData);
+        }
+    };
+    </script>   
+</body>
+</html>

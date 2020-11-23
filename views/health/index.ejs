@@ -65,6 +65,7 @@
                         <div class="form-group">
                             <label >請輸入您的<%= result.name %></label>
                             <input type="number" class="form-control"  placeholder="90%">
+                        </div>
                     <%}%>  
                     <% if (result.name == '總膽固醇') {%>
                         <div class="form-group">
@@ -100,14 +101,27 @@
                 <table class="table table-bordered">
                     <thead>
                         <tr>
-                        <th scope="col"><%= result.name %></th>
-                        <th scope="col">DateTime</th>
+                            <% if (result.name == '血壓'){ %>
+                                <th>收縮壓</th>
+                                <th>舒張壓</th>
+                            <% } %>
+                            
+                            <% if (result.name != '血壓'){ %>
+                                <th scope="col"><%= result.name %></th>
+                            <% } %>
+                            <th scope="col">DateTime</th>
                         </tr>
                     </thead>
                     <tbody>
                         <% for (let i = 0; i < past_data.length; i++) {%>
                         <tr>
-                            <td><%- past_data[i].value %></td>
+                            <% if (result.name == '血壓'){ %>
+                                <td><%- past_data[i].value.split('/')[0] %></td>
+                                <td><%- past_data[i].value.split('/')[1] %></td>
+                            <% } %>
+                            <% if (result.name != '血壓'){ %>
+                                <td><%- past_data[i].value %></td>
+                            <% } %>
                             <td><%- timestamp.timeConverter(past_data[i].date_time) %></td>
                         </tr>
                         <% } %>
@@ -118,15 +132,23 @@
 
             </el-tab-pane>
             
-
+            <el-tab-pane label="評估">
+                <%- include ./evaluation.ejs %>
+            </el-tab-pane>
             </el-tabs>
+    </div>
+    <div id="result" style="display: none;">
+        <%- JSON.stringify(result) %>
+    </div>
+    <div id="past_data" style="display: none;">
+        <%- JSON.stringify(past_data) %>
     </div>
 </div>
 <script>
     new Vue({
         el:'#app',
         data: {
-            physical_health_type_id: ''
+            physical_health_type_id: '',
         },
         created(){
             let vm = this;
@@ -145,10 +167,103 @@
                         location.reload();
                     }
                 })
-            }
+            },
         }
     })
 </script>
 
 
 
+<script>
+    function datetimeConvert(UNIX_timestamp){  
+        var a = new Date(UNIX_timestamp);
+        var months = ['01','02','03','04','05','06','07','08','09','10','11','12'];
+        var year = a.getFullYear(), month = months[a.getMonth()], date = a.getDate(),
+        date = a.getDate(), hour = a.getHours(), min = a.getMinutes(), sec = a.getSeconds();
+        if (date < 10){
+            date = "0" + date;
+        }
+        if (sec < 10){
+            sec = "0" + sec;
+        }
+        if (hour < 10){
+            hour = "0" + hour;
+        }
+        if (min < 10){
+            min = "0" + min;
+        }
+        return year + '-' + month + '-' + date + ' ' + hour + ':' + min + ':' + sec;
+    }
+    window.onload = function(){
+        let result = JSON.parse(document.getElementById('result').innerHTML);
+        let past_data = JSON.parse(document.getElementById('past_data').innerHTML);
+        console.log(
+            result,
+            past_data
+        )
+    if (result.name =="血壓"){
+        let diastolic=[];
+        let systolic=[];
+        let date_time=[];
+        
+        for (let i=past_data.length-1; i>=past_data.length-7 && past_data[i]!=undefined; i--)
+        {
+            diastolic.push(past_data[i].value.split('/')[0] )
+            systolic.push(past_data[i].value.split('/')[1] )
+            date_time.push(datetimeConvert(past_data[i].date_time))
+        }
+
+        var ctx = document.getElementById( "example" ),
+        example = new Chart(ctx, {
+            // 參數設定[註1]
+            type: "bar", // 圖表類型
+            data: {
+                labels: date_time, // 標題
+                datasets: [
+                    {
+                        backgroundColor: "#9FB6CD",  
+                        label: "收縮壓",
+                        data: diastolic
+                    },
+                    {
+                        backgroundColor: "#CFCFCF" ,
+                        label: "舒張壓",
+                        data: systolic
+                    }
+                ]
+                
+     
+    
+            }
+        });
+    }
+    else{
+
+        let data=[];
+        let date_time=[];
+        
+        for (let i=past_data.length-1; i>=past_data.length-7 && past_data[i]!=undefined; i--)
+        {
+        
+         data.push(past_data[i].value)
+         date_time.push(datetimeConvert(past_data[i].date_time))
+        }
+
+        var ctx = document.getElementById( "example" ),
+        example = new Chart(ctx, {
+            // 參數設定[註1]
+            type: "line", // 圖表類型
+            data: {
+                labels: date_time, // 標題
+                datasets: [{
+                    label: result.name , // 標籤
+                    data: data, // 資料
+                    borderColor:  "#008B8B",
+                    borderWidth: 1 // 外框寬度
+                }]
+            }
+        });
+    }
+}
+
+</script>
